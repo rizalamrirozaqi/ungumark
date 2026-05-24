@@ -1,0 +1,21 @@
+# version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: base
+    container_name: ungumark-dev
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    # Sinkronisasi folder lokal ke container, kecuali node_modules & .svelte-kit
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.svelte-kit
+    # Jika menggunakan database lokal berbentuk file (SQLite/LibSQL local), 
+    # pastikan arahkan volume eksternal ke file DB tersebut di sini
+    env_file:
+      - .env
