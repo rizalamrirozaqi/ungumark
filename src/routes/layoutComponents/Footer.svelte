@@ -1,4 +1,5 @@
 <script lang="ts">
+    import favicon from '$lib/assets/favicon.png';
     let { 
         onOpenPrivacy, 
         onOpenTerms 
@@ -12,11 +13,7 @@
     <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row">
         
         <div class="flex items-center gap-2 opacity-80 transition-opacity hover:opacity-100">
-            <div class="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-sm">
-                <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                </svg>
-            </div>
+            <img src={favicon} alt="UnguMark Logo" class="h-5 w-5 ">
             <span class="font-sans text-sm font-bold text-slate-800">UnguMark<span class="text-purple-600">.</span></span>
         </div>
 
