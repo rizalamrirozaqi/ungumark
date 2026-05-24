@@ -18,12 +18,12 @@
   },
   "icons": [
     {
-      "src": "https://ui-avatars.com/api/?name=UM&background=9333ea&color=fff&size=192",
+      "src": "./ungumark-192px.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://ui-avatars.com/api/?name=UM&background=9333ea&color=fff&size=512",
+      "src": "./ungumark-512px.png",
       "sizes": "512x512",
       "type": "image/png"
     }
