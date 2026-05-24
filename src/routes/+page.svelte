@@ -53,6 +53,28 @@
             // Trik ini menggunakan History API bawaan browser untuk ngilangin parameter ?text=... 
             window.history.replaceState({}, document.title, window.location.pathname);
         }
+
+        // PENANGKAP TOMBOL BACK HP
+        const handleBackButton = (e: PopStateEvent) => {
+            // Kalau user mencet Back pas lagi di dalam sebuah Grup
+            if (store.viewMode === 'links' && store.activeCategory !== 'all') {
+                // Jangan keluar aplikasi, tapi balikin tampilannya ke menu awal
+                store.viewMode = 'groups';
+                store.activeCategory = 'all';
+            }
+            // Kalau modal lagi kebuka, bisa tambahin juga:
+            else if (store.modal.isOpen) {
+                store.closeModal();
+            }
+        };
+
+        // Pasang kuping buat dengerin kalau tombol back HP dipencet
+        window.addEventListener('popstate', handleBackButton);
+
+        // Bersihin listener kalau halamannya ditutup (best practice)
+        return () => {
+            window.removeEventListener('popstate', handleBackButton);
+        };
     });
 </script>
 

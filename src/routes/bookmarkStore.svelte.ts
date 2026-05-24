@@ -280,6 +280,11 @@ export class BookmarkStore {
         this.activeCategory = groupName;
         this.viewMode = 'links';
         this.q = '';
+
+        // Trik: Bikin riwayat "halaman palsu" biar tombol Back HP bisa dipencet
+        if (typeof window !== 'undefined') {
+            window.history.pushState({ isInsideGroup: true }, '');
+        }
     };
 
     showOptions = (options: { value: string; label: string; color?: string }[], onSelect: (val: string) => void) => {
