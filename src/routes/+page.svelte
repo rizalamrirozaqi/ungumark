@@ -34,6 +34,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="UnguMark - Smart Bookmark Manager" />
     <meta name="twitter:description" content="Simpan, atur, dan temukan kembali semua link pentingmu dalam satu tempat." />
+    <meta name="google-site-verification" content="hT-5zdyxB2lYDGTrLN3nkYsqDJOC9ZQYBKM349WR4z8" />
 </svelte:head>
 <div class="min-h-screen bg-slate-50/50 font-sans text-slate-800 selection:bg-purple-600 selection:text-white">
     <main class="mx-auto flex max-w-6xl flex-1 flex-col px-4 py-10">

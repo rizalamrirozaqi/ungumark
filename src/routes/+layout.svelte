@@ -27,6 +27,7 @@
     
     <meta name="keywords" content="bookmark manager, simpan link, sveltekit bookmark, ungumark" />
     <link rel="icon" href={favicon} />
+    <meta name="google-site-verification" content="hT-5zdyxB2lYDGTrLN3nkYsqDJOC9ZQYBKM349WR4z8" />
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-[#f8fafc] font-sans text-slate-900 selection:bg-purple-500 selection:text-white">
