@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { signOut, useSession } from '$lib/auth-client';
+    import favicon from '$lib/assets/favicon.png';
     
     let { onOpenProfile } = $props<{
         onOpenProfile: () => void;
@@ -18,11 +19,9 @@
     <nav class="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/40 bg-white/70 px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md">
         
         <a href="/" class="group flex items-center gap-2.5 font-sans text-lg font-bold tracking-tight text-slate-800 transition hover:text-purple-600">
-            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-sm transition group-hover:scale-105">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                </svg>
-            </div>
+            <img src={favicon} alt="UnguMark Logo" class="h-6 w-6 ">
+            <!-- <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-sm transition group-hover:scale-105">
+            </div> -->
             <span>UnguMark<span class="text-purple-600">.</span></span>
         </a>
 
