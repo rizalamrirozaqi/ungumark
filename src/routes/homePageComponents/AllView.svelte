@@ -56,34 +56,24 @@
 {:else}
     <div class="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
         {#each filteredItems as item (item.id)}
-            <article class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-purple-900/5 hover:ring-purple-100 sm:rounded-[2rem]">
-                
+            <article class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-100 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-900/5 hover:ring-purple-100 sm:rounded-[2rem]">
+                            
                 <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-50">
-                    <!-- <div class="absolute right-2 top-2 z-20 flex gap-1 opacity-100 transition-opacity duration-300 group-hover:opacity-100 sm:right-3 sm:top-3 sm:gap-1.5 sm:opacity-0">
-                        <button onclick={() => onEdit(item.id)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-blue-500 hover:text-white sm:p-2.5" title="Edit Detail">
-                            <svg class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                        </button>
-                        <button onclick={() => onMove(item)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-purple-600 hover:text-white sm:p-2.5" title="Pindah Grup">
-                            <svg class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                        </button>
-                        <button onclick={() => onDelete(item.id)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-rose-500 hover:text-white sm:p-2.5" title="Hapus">
-                            <svg class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
-                    </div> -->
+                    
                     <div class="absolute right-2 top-2 z-20 opacity-100 transition-opacity duration-300 group-hover:opacity-100 sm:right-3 sm:top-3 sm:opacity-0">
                         <div class="hidden sm:flex gap-1.5">
-                            <button onclick={() => onEdit(item.id)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-blue-500 hover:text-white" title="Edit Detail">
+                            <button onclick={() => onEdit(item.id)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-blue-500 hover:text-white" title="Edit Detail">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                             </button>
-                            <button onclick={() => onMove(item)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-purple-600 hover:text-white" title="Pindah Grup">
+                            <button onclick={() => onMove(item)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-purple-600 hover:text-white" title="Pindah Grup">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                             </button>
-                            <button onclick={() => onDelete(item.id)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-rose-500 hover:text-white" title="Hapus">
+                            <button onclick={() => onDelete(item.id)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-rose-500 hover:text-white" title="Hapus">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                         </div>
 
-                        <button onclick={() => onMobileMenu(item)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur transition hover:bg-slate-200 sm:hidden">
+                        <button onclick={() => onMobileMenu(item)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm transition hover:bg-slate-200 sm:hidden">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="5" r="2.5" />
                                 <circle cx="12" cy="12" r="2.5" />
@@ -95,14 +85,14 @@
                     {#if item.category && activeCategory === 'all'}
                         <button 
                             onclick={() => onOpenGroup(item.category)}
-                            class="absolute left-2 top-2 z-10 rounded-full bg-white/95 px-2 py-1 text-[8px] font-bold uppercase tracking-widest text-purple-700 shadow-sm backdrop-blur transition hover:scale-105 sm:left-3 sm:top-3 sm:px-3 sm:py-1.5 sm:text-[10px]"
+                            class="absolute left-2 top-2 z-10 rounded-full bg-white/95 px-2 py-1 text-[8px] font-bold uppercase tracking-widest text-purple-700 shadow-sm transition hover:scale-105 sm:left-3 sm:top-3 sm:px-3 sm:py-1.5 sm:text-[10px]"
                         >
                             {item.category}
                         </button>
                     {/if}
 
                     {#if item.metadata?.image}
-                        <img src={item.metadata.image} alt="" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
+                        <img src={item.metadata.image} alt="" class="h-full w-full object-cover transform-gpu transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                     {:else}
                         <div class="flex h-full items-center justify-center text-slate-300">
                             <svg class="h-8 w-8 sm:h-10 sm:w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
