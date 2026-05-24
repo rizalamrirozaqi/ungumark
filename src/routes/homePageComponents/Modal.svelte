@@ -1,26 +1,45 @@
 <script lang="ts">
+    import { fade, fly } from 'svelte/transition';
+    import { portal } from '$lib/actions/portal';
+
     let { modal = $bindable() } = $props<{
         modal: any;
     }>();
 </script>
 
 {#if modal.isOpen}
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-sm transition-all" onclick={modal.onCancel}>
-        <div class="w-full max-w-md overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-2xl shadow-purple-900/10 ring-1 ring-slate-100" onclick={(e) => e.stopPropagation()}>
+    <div 
+        use:portal
+        transition:fade={{ duration: 150 }}
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4" 
+        style="will-change: opacity;"
+        onclick={modal.onCancel}
+    >
+        <div 
+            transition:fly={{ y: 20, duration: 250, opacity: 1 }}
+            class="w-full max-w-md overflow-hidden rounded-[2rem] bg-white p-6 shadow-2xl ring-1 ring-slate-100 sm:p-8" 
+            style="will-change: transform, opacity;"
+            onclick={(e) => e.stopPropagation()}
+        >
             
             {#if modal.type === 'options'}
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1">
+                    <h3 class="mb-3 px-2 text-lg font-bold text-slate-900">Pilih Aksi</h3>
+                    
                     {#each modal.options as opt}
                         <button 
                             onclick={() => modal.onConfirm(opt.value)} 
-                            class="w-full cursor-pointer rounded-2xl bg-slate-50 p-4 text-center text-sm font-bold transition hover:bg-purple-50 {opt.color || 'text-slate-700 hover:text-purple-700'}"
+                            class="flex w-full cursor-pointer items-center justify-start rounded-xl bg-transparent px-4 py-3.5 text-left text-sm font-semibold transition hover:bg-slate-50 active:bg-slate-100 {opt.color || 'text-slate-700 hover:text-purple-600'}"
                         >
                             {opt.label}
                         </button>
                     {/each}
+                </div>
+
+                <div class="mt-4 flex justify-end">
                     <button 
                         onclick={modal.onCancel} 
-                        class="mt-2 w-full cursor-pointer rounded-2xl bg-white p-4 text-center text-sm font-bold text-slate-400 transition hover:bg-slate-50"
+                        class="cursor-pointer rounded-xl px-6 py-2.5 text-sm font-bold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
                     >
                         Batal
                     </button>
@@ -28,7 +47,7 @@
 
             {:else}
                 <div class="mb-6 flex items-center gap-4">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-full {modal.type === 'alert' ? 'bg-red-50 text-red-500' : 'bg-purple-50 text-purple-600'}">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full {modal.type === 'alert' ? 'bg-red-50 text-red-500' : 'bg-purple-50 text-purple-600'}">
                         {#if modal.type === 'alert'}
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                         {:else if modal.type === 'prompt' || modal.type === 'edit-meta'}

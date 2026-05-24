@@ -26,37 +26,6 @@
         goto('/sign-in');
     }
 
-    // // Fungsi untuk memproses foto dari galeri menjadi teks Base64
-    // function handleFileChange(event: Event) {
-    //     const input = event.target as HTMLInputElement;
-    //     const file = input.files?.[0];
-    //     if (!file) return;
-
-    //     // Validasi tipe file
-    //     if (!file.type.startsWith('image/')) {
-    //         alert('Format file tidak didukung. Harap pilih gambar.');
-    //         input.value = '';
-    //         return;
-    //     }
-
-    //     // Batasi ukuran file (WAJIB KECIL! Maksimal 500 KB agar tidak nge-lag)
-    //     if (file.size > 500 * 1024) {
-    //         alert('Ukuran gambar terlalu besar! Maksimal 500 KB (setengah MegaByte) demi performa.');
-    //         // Reset input
-    //         input.value = '';
-    //         return;
-    //     }
-
-    //     const reader = new FileReader();
-    //     reader.onload = (e) => {
-    //         if (e.target?.result && typeof e.target.result === 'string') {
-    //             // Simpan hasil konversi ke state (otomatis mengubah live preview)
-    //             editImage = e.target.result;
-    //         }
-    //     };
-    //     reader.readAsDataURL(file);
-    // }
-
     async function handleUpdateProfile(e: SubmitEvent) {
         e.preventDefault();
         if (!editName.trim()) return;
@@ -94,38 +63,11 @@
         >
             
             <div class="mb-8 flex flex-col items-center text-center">
-                
-                <!-- <button 
-                    type="button" 
-                    class="relative mb-4 flex h-24 w-24 items-center justify-center rounded-full hover:opacity-80 transition-opacity focus:outline-none focus:ring-4 focus:ring-purple-200"
-                    onclick={() => fileInput.click()}
-                    title="Pilih foto dari galeri (HP/Laptop)"
-                > -->
-                    <!-- {#if editImage || $session.data.user.image} -->
                         <img 
                             src={editImage || $session.data.user.image} 
                             alt="Avatar Preview" 
                             class="h-25 w-25 rounded-full object-cover ring-4 ring-purple-50" 
-                            />
-                            <!-- onerror={(e) => (e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + editName + '&background=E9D5FF&color=7E22CE')} -->
-                    <!-- {:else}
-                        <div class="flex h-full w-full items-center justify-center rounded-full bg-purple-100 text-3xl font-bold text-purple-700 ring-4 ring-purple-50 ">
-                            {(editName || $session.data.user.email || '?')[0].toUpperCase()}
-                        </div>
-                    {/if}
-                    
-                    <div class="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-white shadow-sm ring-2 ring-white hover:cursor-pointer">
-                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                    </div> -->
-                <!-- </button> -->
-                
-                <!-- <input 
-                    type="file" 
-                    accept="image/png, image/jpeg, image/webp" 
-                    class="hidden" 
-                    bind:this={fileInput} 
-                    onchange={handleFileChange} 
-                /> -->
+                        >
 
                 <h3 class="text-xl font-bold text-slate-900">Pengaturan Profil</h3>
                 <p class="text-sm font-medium text-slate-500">Sesuaikan identitas akunmu.</p>

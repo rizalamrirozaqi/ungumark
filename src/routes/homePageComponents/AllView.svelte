@@ -43,7 +43,7 @@
 {/if}
 
 {#if filteredItems.length === 0}
-    <div class="flex flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed border-slate-200 py-32 text-center bg-white/50">
+    <div class="flex flex-col items-center justif   y-center rounded-[2.5rem] border-2 border-dashed border-slate-200 py-32 text-center bg-white/50">
         <div class="mb-4 rounded-full bg-slate-100 p-4 text-slate-300">
             <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
         </div>
@@ -62,18 +62,18 @@
                     
                     <div class="absolute right-2 top-2 z-20 opacity-100 transition-opacity duration-300 group-hover:opacity-100 sm:right-3 sm:top-3 sm:opacity-0">
                         <div class="hidden sm:flex gap-1.5">
-                            <button onclick={() => onEdit(item.id)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-blue-500 hover:text-white" title="Edit Detail">
+                            <button onclick={(e) => { e.stopPropagation(); onEdit(item.id)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-blue-500 hover:text-white" title="Edit Detail">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                             </button>
-                            <button onclick={() => onMove(item)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-purple-600 hover:text-white" title="Pindah Grup">
+                            <button onclick={(e) => { e.stopPropagation(); onMove(item)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-purple-600 hover:text-white" title="Pindah Grup">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                             </button>
-                            <button onclick={() => onDelete(item.id)} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-rose-500 hover:text-white" title="Hapus">
+                            <button onclick={(e) => { e.stopPropagation(); onDelete(item.id)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-rose-500 hover:text-white" title="Hapus">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                         </div>
 
-                        <button onclick={() => onMobileMenu(item)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm transition hover:bg-slate-200 sm:hidden">
+                        <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item)}} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm transition hover:bg-slate-200 sm:hidden">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="5" r="2.5" />
                                 <circle cx="12" cy="12" r="2.5" />
@@ -84,7 +84,7 @@
 
                     {#if item.category && activeCategory === 'all'}
                         <button 
-                            onclick={() => onOpenGroup(item.category)}
+                            onclick={(e) => { e.stopPropagation(); onOpenGroup(item.category)}}
                             class="absolute left-2 top-2 z-10 rounded-full bg-white/95 px-2 py-1 text-[8px] font-bold uppercase tracking-widest text-purple-700 shadow-sm transition hover:scale-105 sm:left-3 sm:top-3 sm:px-3 sm:py-1.5 sm:text-[10px]"
                         >
                             {item.category}
