@@ -21,6 +21,11 @@
 </script>
 
 <svelte:head>
+    <title>UnguMark - Smart Bookmark Manager</title>
+    
+    <meta name="description" content="Simpan, atur, dan kelola semua link bookmark kamu dengan mudah dan cepat menggunakan UnguMark." />
+    
+    <meta name="keywords" content="bookmark manager, simpan link, sveltekit bookmark, ungumark" />
     <link rel="icon" href={favicon} />
 </svelte:head>
 

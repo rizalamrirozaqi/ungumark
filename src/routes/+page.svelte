@@ -21,6 +21,20 @@
     });
 </script>
 
+<svelte:head>
+    <title>UnguMark - Smart Bookmark & Link Manager</title>
+    <meta name="description" content="Simpan, atur, dan temukan kembali semua link pentingmu dalam satu tempat yang rapi dan terorganisir dengan UnguMark." />
+    <meta name="keywords" content="bookmark manager, simpan link, svelte bookmark, link manager, ungumark" />
+    
+    <meta property="og:title" content="UnguMark - Smart Bookmark & Link Manager" />
+    <meta property="og:description" content="Simpan, atur, dan temukan kembali semua link pentingmu dalam satu tempat dengan mudah." />
+    <meta property="og:url" content="https://ungumark.vercel.app/" />
+    <meta property="og:type" content="website" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UnguMark - Smart Bookmark Manager" />
+    <meta name="twitter:description" content="Simpan, atur, dan temukan kembali semua link pentingmu dalam satu tempat." />
+</svelte:head>
 <div class="min-h-screen bg-slate-50/50 font-sans text-slate-800 selection:bg-purple-600 selection:text-white">
     <main class="mx-auto flex max-w-6xl flex-1 flex-col px-4 py-10">
         <Header />
