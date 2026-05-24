@@ -254,8 +254,8 @@ export class BookmarkStore {
         });
     };
 
-    onSubmit = async (e: SubmitEvent) => {
-        e.preventDefault();
+    onSubmit = async (e: SubmitEvent | Event) => {
+        if (e) e.preventDefault();
         this.error = null;
         this.isLoading = true;
         try {
