@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { signOut, useSession, authClient } from '$lib/auth-client';
+    import { fade, fly } from 'svelte/transition';
 
     let { isOpen = $bindable() } = $props<{ isOpen: boolean }>();
 
@@ -54,10 +55,13 @@
 
 {#if isOpen && $session.data?.user}
     <div 
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-sm"
+        transition:fade={{ duration:150 }}
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4"
+        style="will-change: opacity;"
         onclick={() => isOpen = false}
     >
         <div 
+            transition:fly={{ y: 20, duration: 250, opacity: 1 }}
             class="w-full max-w-md overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-2xl shadow-purple-900/10 ring-1 ring-slate-100"
             onclick={(e) => e.stopPropagation()} 
         >

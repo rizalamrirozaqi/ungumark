@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { fade, fly } from 'svelte/transition';
     let { isOpen = $bindable(false) } = $props<{ isOpen: boolean; }>();
 
     function closeModal() {
@@ -7,8 +8,8 @@
 </script>
 
 {#if isOpen}
-    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-sm transition-all">
-        <div class="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-[2.5rem] bg-white shadow-2xl shadow-purple-900/10 ring-1 ring-slate-100">
+    <div transition:fade={{ duration:150 }} class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/30 p-4" style="will-change: opacity;">
+        <div transition:fly={{ y: 20, duration: 250, opacity: 1 }} class="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-[2.5rem] bg-white shadow-2xl shadow-purple-900/10 ring-1 ring-slate-100">
             
             <div class="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4 sm:px-8">
                 <h2 class="text-sm font-bold uppercase tracking-widest text-purple-700">Kebijakan Privasi</h2>

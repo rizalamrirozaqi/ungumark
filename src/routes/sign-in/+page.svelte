@@ -40,7 +40,7 @@
 </script>
 
 <svelte:head>
-	<title>Sign In — Smart Bookmark</title>
+	<title>Ungumark — Smart Bookmark</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center px-4">

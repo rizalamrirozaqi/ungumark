@@ -1,13 +1,42 @@
 export async function fetchUrlMetadata(targetUrl: string) {
     try {
-        const parsedUrl = new URL(targetUrl);
+        // 1. OBAT ANTI-CRASH: Pastikan URL ada http/https-nya
+        let validUrl = targetUrl.trim();
+        if (!validUrl.startsWith('http://') && !validUrl.startsWith('https://')) {
+            validUrl = 'https://' + validUrl;
+        }
+
+        // Cek apakah URL valid
+        const parsedUrl = new URL(validUrl);
         const hostname = parsedUrl.hostname;
 
-        // 1. JALUR YOUTUBE (Tetap pakai oEmbed bawaan karena lebih ngebut)
+        // 2. JALUR UTAMA: Serahkan semuanya ke Microlink
+        // Microlink otomatis ngikutin s.id / bit.ly sampai ke tujuan akhir!
+        try {
+            const microlinkUrl = `https://api.microlink.io/?url=${encodeURIComponent(validUrl)}`;
+            const response = await fetch(microlinkUrl);
+            
+            if (response.ok) {
+                const json = await response.json();
+                const data = json.data;
+                
+                return {
+                    title: data.title || data.author || 'Tautan Tersimpan',
+                    description: data.description || 'Deskripsi tidak tersedia.',
+                    image: data.image?.url || data.logo?.url || '',
+                    // Kerennya Microlink: data.url berisi alamat asli tujuan akhirnya!
+                    url: data.url || validUrl 
+                };
+            }
+        } catch (microErr) {
+            console.log("Microlink gagal, coba jalur manual...");
+        }
+
+        // 3. JALUR MANUAL YOUTUBE (Kalau Microlink lagi error/limit)
         if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
-            let videoUrl = targetUrl;
+            let videoUrl = validUrl;
             if (hostname === 'music.youtube.com') {
-                videoUrl = targetUrl.replace('music.youtube.com', 'www.youtube.com');
+                videoUrl = validUrl.replace('music.youtube.com', 'www.youtube.com');
             }
             const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(videoUrl)}&format=json`);
             if (response.ok) {
@@ -16,46 +45,28 @@ export async function fetchUrlMetadata(targetUrl: string) {
                     title: data.title,
                     description: `Channel: ${data.author_name}`, 
                     image: data.thumbnail_url,
-                    url: targetUrl
+                    url: validUrl
                 };
             }
         }
 
-        // 2. JALUR INSTAGRAM, TIKTOK, & TWITTER (Lempar ke calo Microlink)
-        if (hostname.includes('instagram.com') || hostname.includes('tiktok.com') || hostname.includes('x.com') || hostname.includes('twitter.com')) {
-            
-            // Panggil API Microlink
-            const microlinkUrl = `https://api.microlink.io/?url=${encodeURIComponent(targetUrl)}`;
-            const response = await fetch(microlinkUrl);
-            
-            if (response.ok) {
-                const json = await response.json();
-                const data = json.data;
-                
-                return {
-                    // Microlink sangat pintar, kalau gak ada judul, dia ambil author
-                    title: data.title || data.author || 'Postingan Sosial Media',
-                    description: data.description || 'Deskripsi tidak tersedia.',
-                    // Ambil URL gambar dari object image milik microlink
-                    image: data.image?.url || data.logo?.url || '',
-                    url: targetUrl
-                };
-            }
-        }
-
-        // 3. JALUR WEBSITE BIASA LAINNYA (Fallback)
+        // 4. FALLBACK TERAKHIR
         return {
             title: "Tautan Tersimpan",
-            description: "Deskripsi belum tersedia.",
+            description: "Akses ke detail website dibatasi oleh server.",
             image: "",
-            url: targetUrl
+            url: validUrl
         };
 
     } catch (error) {
-        console.error("Gagal nge-fetch data:", error);
+        // Nah, coba perhatikan Terminal VS Code kamu kalau masih gagal!
+        console.error("====== GAGAL NGE-FETCH ======");
+        console.error("URL:", targetUrl);
+        console.error("Pesan Error:", error);
+        
         return {
             title: "Gagal memuat metadata",
-            description: "",
+            description: "Coba edit judul dan deskripsi secara manual.",
             image: "",
             url: targetUrl
         };
