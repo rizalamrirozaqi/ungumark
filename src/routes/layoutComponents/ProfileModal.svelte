@@ -35,7 +35,6 @@
         try {
             const { error } = await authClient.updateUser({ 
                 name: editName.trim(),
-                // image: editImage.trim() || null
             });
             
             if (error) {
@@ -44,7 +43,7 @@
             }
 
             isOpen = false;
-            window.location.reload(); // Refresh halaman agar data ter-update sempurna
+            window.location.reload(); 
         } catch (err) {
             alert(`Gagal memperbarui profil akibat masalah jaringan.`);
         } finally {
@@ -68,9 +67,9 @@
             
             <div class="mb-8 flex flex-col items-center text-center">
                         {#if $session.data.user.image}
-                            <img referrerpolicy="no-referrer" src={$session.data.user.image || `https://ui-avatars.com/api/?name=${$session.data.user.name || $session.data.user.email}&background=f3e8ff&color=7e22ce&size=200&font-size=0.4`} alt="Avatar" class="h-25 w-25 rounded-full object-cover ring-2 ring-purple-100" />
+                            <img src={$session.data.user.image} alt="Avatar" class="h-25 w-25 rounded-full object-cover ring-2 ring-purple-100" />
                         {:else}
-                            <div class="flex h-25 w-25 items-center justify-center rounded-full bg-purple-100 text-4xl font-semibold text-purple-700 ring-1 ring-purple-200">
+                            <div class="flex h-25 w-25 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-purple-700 ring-1 ring-purple-200">
                                 {($session.data.user.name || $session.data.user.email || '?')[0].toUpperCase()}
                             </div>
                         {/if}
