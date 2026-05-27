@@ -11,7 +11,7 @@ const resend = new Resend(env.RESEND_API_KEY || "re_dummy");
 export const auth = betterAuth({
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:5173',
-    trustedOrigins: ['https://ungumark.my.id', 'https://ungumark.vercel.app'],
+    trustedOrigins: ['http://localhost:5173', 'https://ungumark.my.id', 'https://ungumark.vercel.app'],
     database: drizzleAdapter(db, {
         provider: 'sqlite',
         schema: {
