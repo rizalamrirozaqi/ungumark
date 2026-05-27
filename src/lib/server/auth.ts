@@ -6,7 +6,7 @@ import { Resend } from 'resend';
 import { db } from './db/client';
 import * as schema from './db/auth-schema';
 
-const resend = new Resend(env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY || "re_dummy");
 
 export const auth = betterAuth({
     secret: env.BETTER_AUTH_SECRET,
