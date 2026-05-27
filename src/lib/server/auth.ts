@@ -10,7 +10,7 @@ import * as schema from './db/auth-schema';
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const auth = betterAuth({
-    plugin:[
+    plugins:[
         dash()
     ],
     secret: env.BETTER_AUTH_SECRET,
