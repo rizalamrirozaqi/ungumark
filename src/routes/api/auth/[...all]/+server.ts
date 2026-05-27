@@ -7,3 +7,4 @@ export const OPTIONS: RequestHandler = ({ request }) => auth.handler(request);
 export const PATCH: RequestHandler = ({ request }) => auth.handler(request);
 export const PUT: RequestHandler = ({ request }) => auth.handler(request);
 export const DELETE: RequestHandler = ({ request }) => auth.handler(request);
+export const fallback: RequestHandler = ({ request }) => auth.handler(request);
