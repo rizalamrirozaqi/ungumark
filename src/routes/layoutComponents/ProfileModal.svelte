@@ -67,11 +67,13 @@
         >
             
             <div class="mb-8 flex flex-col items-center text-center">
-                        <img 
-                            src={editImage || $session.data.user.image} 
-                            alt="Avatar Preview" 
-                            class="h-25 w-25 rounded-full object-cover ring-4 ring-purple-50" 
-                        >
+                        {#if $session.data.user.image}
+                            <img referrerpolicy="no-referrer" src={$session.data.user.image || `https://ui-avatars.com/api/?name=${$session.data.user.name || $session.data.user.email}&background=f3e8ff&color=7e22ce&size=200&font-size=0.4`} alt="Avatar" class="h-25 w-25 rounded-full object-cover ring-2 ring-purple-100" />
+                        {:else}
+                            <div class="flex h-25 w-25 items-center justify-center rounded-full bg-purple-100 text-4xl font-semibold text-purple-700 ring-1 ring-purple-200">
+                                {($session.data.user.name || $session.data.user.email || '?')[0].toUpperCase()}
+                            </div>
+                        {/if}
 
                 <h3 class="text-xl font-bold text-slate-900">Pengaturan Profil</h3>
                 <p class="text-sm font-medium text-slate-500">Sesuaikan identitas akunmu.</p>

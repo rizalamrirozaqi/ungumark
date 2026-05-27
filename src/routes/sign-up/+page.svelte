@@ -8,9 +8,11 @@
     let confirmPassword = $state('');
     let error = $state<string | null>(null);
     let loading = $state(false);
+    let registeredProvider = $state('');
     
-    // Tambahan state buat nandain pendaftaran sukses
+    // State UI
     let isSuccess = $state(false); 
+    let isAlreadyRegistered = $state(false); // Tambahan state buat nampilin UI "Udah Terdaftar"
 
     async function onSubmit(e: SubmitEvent) {
         e.preventDefault();
@@ -24,29 +26,51 @@
             error = 'Password minimal 8 karakter.';
             return;
         }
-		if (!password.match('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')) {
-			error = 'Password harus mengandung huruf dan angka.';
-			return;
-		}
+        if (!password.match('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')) {
+            error = 'Password harus mengandung huruf dan angka.';
+            return;
+        }
 
         loading = true;
         try {
-
-			const domain = email.split('@')[1];
-
-			const dnsResponse = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
-			const dnsData = await dnsResponse.json();
-			if (!dnsData.Answer || dnsData.Answer.length === 0) {
-				error = 'Domain email tidak valid.';
-				loading=false;
-				return;
-			}
-
-            await signUp.email({ name, email, password });
+            // (Biarin kode validasi DNS MX lu tetep ada di sini)
+            const domain = email.split('@')[1];
+            const dnsResponse = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
+            const dnsData = await dnsResponse.json();
             
-            isSuccess = true; 
-        } catch (err) {
-            error = err instanceof Error ? err.message : 'Daftar gagal.';
+            if (!dnsData.Answer || dnsData.Answer.length === 0) {
+                error = 'Domain email tidak valid.';
+                loading = false;
+                return;
+            }
+
+            // 1. 🔥 KITA INTEROGASI DATABASE KITA DULU 🔥
+            const checkRes = await fetch('/check-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const checkData = await checkRes.json();
+
+            // Kalau email udah ada, langsung STOP di sini dan tampilin UI peringatan!
+            if (checkData.exists) {
+                isAlreadyRegistered = true;
+                registeredProvider = checkData.provider; // Simpen status dia login pake apa
+                return;
+            }
+
+            // 2. Kalau email beneran baru, silakan lanjut ke Better Auth
+            const { data, error: authError } = await signUp.email({ name, email, password });
+            
+            if (authError) {
+                error = authError.message || 'Gagal mendaftar.';
+                return;
+            }
+
+            isSuccess = true;
+            
+        } catch (err: any) {
+            error = err instanceof Error ? err.message : 'Terjadi kesalahan sistem.';
         } finally {
             loading = false;
         }
@@ -74,7 +98,39 @@
             </p>
         </div>
 
-        {#if isSuccess}
+        {#if isAlreadyRegistered}
+            <div class="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5 text-center">
+                <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                    <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-lg font-semibold text-slate-900">Akun Sudah Terdaftar</h3>
+                
+                {#if registeredProvider === 'google'}
+                    <p class="text-sm text-slate-500">
+                        Email <span class="font-medium text-slate-900">{email}</span> sudah terdaftar menggunakan <b>Google</b>. Silakan langsung masuk.
+                    </p>
+                    <button
+                        onclick={loginGoogle}
+                        class="mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-slate-900 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+                    >
+                        Lanjutkan dengan Google
+                    </button>
+                {:else}
+                    <p class="text-sm text-slate-500">
+                        Email <span class="font-medium text-slate-900">{email}</span> sudah pernah didaftarkan. Silakan langsung masuk menggunakan akun tersebut.
+                    </p>
+                    <button
+                        onclick={() => goto('/sign-in')}
+                        class="mt-6 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+                    >
+                        Menuju Halaman Login
+                    </button>
+                {/if}
+            </div>
+
+        {:else if isSuccess}
             <div class="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5 text-center">
                 <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
                     <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -92,6 +148,7 @@
                     Kembali ke halaman Login
                 </button>
             </div>
+
         {:else}
             <form
                 class="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5"
