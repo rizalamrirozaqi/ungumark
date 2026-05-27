@@ -1,23 +1,20 @@
 import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import { db } from '$lib/server/db/client'; // Sesuaikan path db kamu
-import { user } from '$lib/server/db/auth-schema'; // Sesuaikan path schema user kamu
+import { db } from '$lib/server/db/client'; 
+import { user } from '$lib/server/db/auth-schema'; 
 import { and, eq, lt } from 'drizzle-orm';
+import type { RequestHandler } from './$types';
 
-export async function GET({ request }) {
-    // 1. Gembok Keamanan: Biar gak sembarang orang bisa manggil API ini
+export const GET: RequestHandler = async ({ request }) => {
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
-        return json({ error: 'Hayo mau ngapain? Akses ditolak!' }, { status: 401 });
+        return json({ error: 'Tidak Terverifikasi, Akses ditolak!!' }, { status: 401 });
     }
 
     try {
-        // 2. Hitung waktu mundur (24 jam yang lalu)
         const kemarin = new Date();
         kemarin.setHours(kemarin.getHours() - 24);
 
-        // 3. Perintah Eksekusi Drizzle buat nyapu database
-        // Hapus SEMUA user yang emailVerified = false (0) DAN createdAt lebih kecil dari 24 jam lalu
         const hasil = await db.delete(user).where(
             and(
                 eq(user.emailVerified, false),
@@ -25,7 +22,7 @@ export async function GET({ request }) {
             )
         );
 
-        console.log('Sapuman beraksi! Akun zombie berhasil dihapus.');
+        console.log('Sapuman beraksi! Akun zombie telah berhasil dihapus.');
         
         return json({ 
             success: true, 

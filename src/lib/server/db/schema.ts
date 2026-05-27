@@ -29,7 +29,6 @@ export const urls = sqliteTable(
             .$defaultFn(() => crypto.randomUUID()),
         url: text('url').notNull(),
         
-        // --- 3. TAMBAHKAN ID PEMILIK ---
         userId: text('user_id').notNull(),
 
         createdAt: integer('created_at', { mode: 'timestamp_ms' })
@@ -42,7 +41,6 @@ export const urls = sqliteTable(
             .references(() => groups.id, { onDelete: 'set null' })
     },
     (t) => ({
-        // --- 4. UBAH LOGIKA UNIK ---
         // Satu user nggak boleh nyimpen URL yang sama dua kali,
         // tapi user lain boleh nyimpen URL tersebut.
         urlUserUnique: uniqueIndex('urls_url_user_unique').on(t.url, t.userId)

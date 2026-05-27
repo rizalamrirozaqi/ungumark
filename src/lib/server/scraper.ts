@@ -1,17 +1,14 @@
 export async function fetchUrlMetadata(targetUrl: string) {
     try {
-        // 1. OBAT ANTI-CRASH: Pastikan URL ada http/https-nya
         let validUrl = targetUrl.trim();
         if (!validUrl.startsWith('http://') && !validUrl.startsWith('https://')) {
             validUrl = 'https://' + validUrl;
         }
 
-        // Cek apakah URL valid
         const parsedUrl = new URL(validUrl);
         const hostname = parsedUrl.hostname;
 
-        // 2. JALUR UTAMA: Serahkan semuanya ke Microlink
-        // Microlink otomatis ngikutin s.id / bit.ly sampai ke tujuan akhir!
+        // Microlink 
         try {
             const microlinkUrl = `https://api.microlink.io/?url=${encodeURIComponent(validUrl)}`;
             const response = await fetch(microlinkUrl);
@@ -24,7 +21,6 @@ export async function fetchUrlMetadata(targetUrl: string) {
                     title: data.title || data.author || 'Tautan Tersimpan',
                     description: data.description || 'Deskripsi tidak tersedia.',
                     image: data.image?.url || data.logo?.url || '',
-                    // Kerennya Microlink: data.url berisi alamat asli tujuan akhirnya!
                     url: data.url || validUrl 
                 };
             }
@@ -32,7 +28,7 @@ export async function fetchUrlMetadata(targetUrl: string) {
             console.log("Microlink gagal, coba jalur manual...");
         }
 
-        // 3. JALUR MANUAL YOUTUBE (Kalau Microlink lagi error/limit)
+        // JALUR MANUAL YOUTUBE (Kalo Microlink lagi error/limit)
         if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
             let videoUrl = validUrl;
             if (hostname === 'music.youtube.com') {

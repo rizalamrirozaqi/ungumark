@@ -8,7 +8,8 @@ import { api } from '$lib/server/api/hono';
 const honoHandle: Handle = async ({ event, resolve }) => {
 	if (
 		event.url.pathname.startsWith('/api') &&
-		!event.url.pathname.startsWith('/api/auth')
+		!event.url.pathname.startsWith('/api/auth') &&
+		!event.url.pathname.startsWith('/api/cron')
 	) {
 		return api.fetch(event.request);
 	}
@@ -22,5 +23,6 @@ const authHandle: Handle = async ({ event, resolve }) => {
 	event.locals.session = session?.session ?? null;
 	return resolve(event);
 };
+
 
 export const handle = sequence(honoHandle, authHandle);
