@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import { signOut, useSession } from '$lib/auth-client';
+    import { useSession } from '$lib/auth-client';
     import favicon from '$lib/assets/favicon.png';
     
     let { onOpenProfile } = $props<{
@@ -8,11 +7,6 @@
     }>();
 
     const session = useSession();
-
-    async function handleSignOut() {
-        await signOut();
-        goto('/sign-in');
-    }
 </script>
 
 <div class="sticky top-4 z-40 px-4">

@@ -13,14 +13,10 @@
         loading = true;
         
         try {
-            // Ambil objek error dari hasil return signIn
             const { data, error: err } = await signIn.email({ email, password });
-            
-            // Kalau ada error dari Better Auth (misal: akun tidak ada / password salah)
             if (err) {
                 error = err.message || 'Email atau password salah.';
             } else {
-                // Kalau sukses, baru pindah halaman
                 goto('/');
             }
         } catch (err) {

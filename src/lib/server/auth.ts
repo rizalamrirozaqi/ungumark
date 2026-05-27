@@ -2,16 +2,23 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { env } from '$env/dynamic/private';
 import { Resend } from 'resend';
+import { dash } from "@better-auth/infra";
 
 import { db } from './db/client';
 import * as schema from './db/auth-schema';
 
-const resend = new Resend(env.RESEND_API_KEY || "re_dummy");
+const resend = new Resend(env.RESEND_API_KEY);
 
 export const auth = betterAuth({
+    plugin:[
+        dash()
+    ],
     secret: env.BETTER_AUTH_SECRET,
-    baseURL: 'https://ungumark.my.id',
-    trustedOrigins: ['http://localhost:5173', 'https://ungumark.my.id', 'https://ungumark.vercel.app'],
+    baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:5173', 
+    trustedOrigins: [
+        'https://ungumark.my.id', 
+        'http://localhost:5173'
+    ],
     database: drizzleAdapter(db, {
         provider: 'sqlite',
         schema: {
@@ -25,7 +32,7 @@ export const auth = betterAuth({
     },
     
     emailVerification: {
-        sendOnSignUp: true, // Otomatis tembak email pas user daftar
+        sendOnSignUp: true, 
         sendVerificationEmail: async ({user, url, token}) => {
             try {
                 await resend.emails.send({

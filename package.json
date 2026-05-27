@@ -26,6 +26,7 @@
 		"vite": "^8.0.7"
 	},
 	"dependencies": {
+		"@better-auth/infra": "^0.2.10",
 		"@libsql/client": "^0.17.3",
 		"better-auth": "^1.6.9",
 		"cheerio": "^1.2.0",

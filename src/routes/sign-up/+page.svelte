@@ -33,7 +33,6 @@
 
         loading = true;
         try {
-            // (Biarin kode validasi DNS MX lu tetep ada di sini)
             const domain = email.split('@')[1];
             const dnsResponse = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
             const dnsData = await dnsResponse.json();
@@ -44,7 +43,6 @@
                 return;
             }
 
-            // 1. 🔥 KITA INTEROGASI DATABASE KITA DULU 🔥
             const checkRes = await fetch('/check-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -52,14 +50,12 @@
             });
             const checkData = await checkRes.json();
 
-            // Kalau email udah ada, langsung STOP di sini dan tampilin UI peringatan!
             if (checkData.exists) {
                 isAlreadyRegistered = true;
-                registeredProvider = checkData.provider; // Simpen status dia login pake apa
+                registeredProvider = checkData.provider; 
                 return;
             }
 
-            // 2. Kalau email beneran baru, silakan lanjut ke Better Auth
             const { data, error: authError } = await signUp.email({ name, email, password });
             
             if (authError) {
