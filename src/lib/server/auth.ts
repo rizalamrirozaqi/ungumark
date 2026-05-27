@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { env } from '$env/dynamic/private';
 import { Resend } from 'resend';
+import { dev } from '$app/environment';
 import { dash } from "@better-auth/infra";
 
 import { db } from './db/client';
@@ -14,7 +15,7 @@ export const auth = betterAuth({
         dash()
     ],
     secret: env.BETTER_AUTH_SECRET,
-    baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:5173', 
+    baseURL: dev ? 'http://localhost:5173' : 'https://ungumark.my.id', 
     trustedOrigins: [
         'https://ungumark.my.id', 
         'http://localhost:5173'

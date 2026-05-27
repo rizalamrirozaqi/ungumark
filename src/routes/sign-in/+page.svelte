@@ -20,7 +20,6 @@
                 goto('/');
             }
         } catch (err) {
-            // Blok catch ini sekarang hanya akan terpanggil kalau ada masalah jaringan (koneksi putus/server mati)
             error = err instanceof Error ? err.message : 'Sign in gagal akibat masalah jaringan.';
         } finally {
             loading = false;
