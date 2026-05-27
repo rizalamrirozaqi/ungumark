@@ -17,7 +17,8 @@ export const auth = betterAuth({
     secret: env.BETTER_AUTH_SECRET,
     baseURL: dev ? 'http://localhost:5173' : 'https://ungumark.my.id', 
     trustedOrigins: [
-        'https://ungumark.my.id', 
+        'https://ungumark.my.id',
+        'https://www.ungumark.my.id',
         'http://localhost:5173'
     ],
     database: drizzleAdapter(db, {

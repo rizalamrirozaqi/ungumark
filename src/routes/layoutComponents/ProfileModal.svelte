@@ -69,7 +69,7 @@
                         {#if $session.data.user.image}
                             <img src={$session.data.user.image} alt="Avatar" class="h-25 w-25 rounded-full object-cover ring-2 ring-purple-100" />
                         {:else}
-                            <div class="flex h-25 w-25 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-purple-700 ring-1 ring-purple-200">
+                            <div class="flex h-25 w-25 items-center justify-center rounded-full bg-purple-100 text-4xl font-semibold text-purple-700 ring-1 ring-purple-200">
                                 {($session.data.user.name || $session.data.user.email || '?')[0].toUpperCase()}
                             </div>
                         {/if}
