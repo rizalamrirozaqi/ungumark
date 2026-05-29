@@ -19,7 +19,8 @@ export const auth = betterAuth({
     trustedOrigins: [
         'https://ungumark.my.id',
         'https://www.ungumark.my.id',
-        'http://localhost:5173'
+        'http://localhost:5173',
+        'http://localhost:4173'
     ],
     database: drizzleAdapter(db, {
         provider: 'sqlite',

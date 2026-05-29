@@ -32,18 +32,20 @@
             <p class="mt-1 text-sm font-medium text-slate-500">{filteredItems.length} tautan tersimpan</p>
         </div>
         <div class="flex gap-3">
-            <button onclick={(e) => onRenameGroup(activeCategory, e)} class="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-purple-600 shadow-sm ring-1 ring-purple-100 transition hover:bg-purple-100">
+            <button onclick={(e) => onRenameGroup(activeCategory, e)} aria-label="Edit Nama" class="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-purple-600 shadow-sm ring-1 ring-purple-100 transition hover:bg-purple-100">
                 Edit Nama
             </button>
-            <button onclick={onCloseGroup} class="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
+            <button onclick={onCloseGroup} aria-label="Tutup" class="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
                 Tutup
             </button>
         </div>
     </div>
+{:else}
+    <h2 class="sr-only">Semua Koleksi Tautan</h2>
 {/if}
 
 {#if filteredItems.length === 0}
-    <div class="flex flex-col items-center justif   y-center rounded-[2.5rem] border-2 border-dashed border-slate-200 py-32 text-center bg-white/50">
+    <div class="flex flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed border-slate-200 py-32 text-center bg-white/50">
         <div class="mb-4 rounded-full bg-slate-100 p-4 text-slate-300">
             <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
         </div>
@@ -62,18 +64,18 @@
                     
                     <div class="absolute right-2 top-2 z-20 opacity-100 transition-opacity duration-300 group-hover:opacity-100 sm:right-3 sm:top-3 sm:opacity-0">
                         <div class="hidden sm:flex gap-1.5">
-                            <button onclick={(e) => { e.stopPropagation(); onEdit(item.id)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-blue-500 hover:text-white" title="Edit Detail">
+                            <button onclick={(e) => { e.stopPropagation(); onEdit(item.id)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-blue-500 hover:text-white" aria-label="Edit Detail">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                             </button>
-                            <button onclick={(e) => { e.stopPropagation(); onMove(item)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-purple-600 hover:text-white" title="Pindah Grup">
+                            <button onclick={(e) => { e.stopPropagation(); onMove(item)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-purple-600 hover:text-white" aria-label="Pindah Grup">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                             </button>
-                            <button onclick={(e) => { e.stopPropagation(); onDelete(item.id)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-rose-500 hover:text-white" title="Hapus">
+                            <button onclick={(e) => { e.stopPropagation(); onDelete(item.id)}} class="rounded-full bg-white/95 p-2.5 text-slate-500 shadow-sm transition hover:bg-rose-500 hover:text-white" aria-label="Hapus">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                         </div>
 
-                        <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item)}} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm transition hover:bg-slate-200 sm:hidden">
+                        <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item)}} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm transition hover:bg-slate-200 sm:hidden" aria-label="Menu">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="5" r="2.5" />
                                 <circle cx="12" cy="12" r="2.5" />
@@ -105,7 +107,7 @@
                     <p class="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-500 sm:mt-3 sm:text-sm">{item.metadata?.description ?? 'Deskripsi tidak tersedia.'}</p>
                     
                     <div class="mt-auto pt-3 sm:pt-6">
-                        <a href={item.url} target="_blank" class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-purple-600 transition hover:text-purple-700 sm:gap-1.5 sm:text-xs">
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={`Kunjungi tautan ${item.metadata?.title ?? 'ini'}`} class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-purple-600 transition hover:text-purple-700 sm:gap-1.5 sm:text-xs">
                             <span class="sm:hidden">Kunjungi</span>
                             <span class="hidden sm:inline">Kunjungi Tautan</span>
                             <svg class="h-3 w-3 sm:h-3.5 sm:w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>

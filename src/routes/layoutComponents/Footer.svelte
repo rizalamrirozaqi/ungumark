@@ -24,7 +24,7 @@
         <div class="flex items-center gap-5 text-xs font-bold uppercase tracking-wider text-slate-400">
             <button onclick={onOpenPrivacy} class="cursor-pointer transition hover:text-purple-600">Privasi</button>
             <button onclick={onOpenTerms} class="cursor-pointer transition hover:text-purple-600">Ketentuan</button>
-            <a href="https://instagram.com/rizalamri.rar" target="_blank" rel="noopener noreferrer" class="transition hover:text-purple-600">
+            <a href="https://instagram.com/rizalamri.rar" target="_blank" rel="noopener noreferrer" class="transition hover:text-purple-600" aria-label="Instagram">
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     class="h-4 w-4" 
@@ -40,7 +40,7 @@
                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
             </a>
-            <a href="mailto:rizalamrirozaqi@gmail.com" class="transition hover:text-purple-600">
+            <a href="mailto:rizalamrirozaqi@gmail.com" class="transition hover:text-purple-600" aria-label="Email">
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     class="h-4 w-4" 
