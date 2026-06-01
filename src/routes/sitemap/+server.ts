@@ -1,12 +1,11 @@
 export async function GET() {
-    const websiteUrl = 'https://ungumark.vercel.app';
+    const websiteUrl = 'https://ungumark.my.id';
 
     // Daftar halaman publik yang mau didaftarkan ke Google
     const pages = [
-        '' // Halaman utama (/)
-        // Kalau nanti kamu punya halaman '/about' atau '/features', tambahkan di sini:
-        // 'about',
-        // 'features'
+        '/', // Halaman utama (/)
+        '/sign-in', // Halaman sign-in
+        '/sign-up', // Halaman sign-up
     ];
 
     const sitemap = `
