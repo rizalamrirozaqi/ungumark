@@ -114,6 +114,7 @@
                 bind:viewMode={store.viewMode} 
                 bind:activeCategory={store.activeCategory} 
                 bind:q={store.q} 
+                bind:layoutMode={store.layoutMode}
                 onCreateNew={store.createNewGroup}
             />
 
@@ -124,6 +125,7 @@
                     onRename={store.promptRenameGroup}
                     onDelete={store.deleteGroup}
                     onOpen={store.openGroup}
+                    layoutMode={store.layoutMode}
                 />
             {:else}
                 <AllView 
@@ -137,6 +139,7 @@
                     onOpenGroup={store.openGroup}
                     onRenameGroup={store.promptRenameGroup}
                     onCloseGroup={() => { store.viewMode = 'groups'; store.activeCategory = 'all'; }}
+                    layoutMode={store.layoutMode}
                 />
             {/if}
         </section>

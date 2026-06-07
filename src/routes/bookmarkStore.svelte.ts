@@ -1,3 +1,5 @@
+import { browser } from '$app/environment';
+
 type ApiMetadata = {
     title: string | null;
     description: string | null;
@@ -22,6 +24,7 @@ export class BookmarkStore {
     q = $state('');
     activeCategory = $state<string | 'all'>('all');
     viewMode = $state<'links' | 'groups'>('links');
+    layoutMode = $state<'grid' | 'list'>('grid');
     manualGroups = $state<string[]>([]);
 
     // Modal State
@@ -145,6 +148,9 @@ export class BookmarkStore {
     };
 
     fetchGroups = async () => {
+
+        if(!browser) return;
+
         try {
             const res = await fetch('/api/groups');
             if (res.ok) {
@@ -247,6 +253,7 @@ export class BookmarkStore {
                     body: JSON.stringify({ id })
                 });
                 if (!res.ok) throw new Error('Gagal');
+                await this.fetchGroups();
             } catch (err) {
                 this.items = previousItems;
                 setTimeout(() => this.showAlert('Gagal', 'Terjadi kesalahan.'), 200);
@@ -270,7 +277,10 @@ export class BookmarkStore {
             this.items = [json as ApiResult, ...this.items.filter((x) => x.id !== (json as ApiResult).id)];
             this.inputUrl = '';
         } catch (err) {
-            this.error = err instanceof Error ? err.message : 'Unknown error';
+            const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+            this.error = errorMsg;
+            // 🔥 TAMBAHIN BARIS INI: Biar kalau Duplicate/Error, muncul Popup!
+            setTimeout(() => this.showAlert('Gagal', errorMsg), 200);
         } finally {
             this.isLoading = false;
         }
@@ -315,4 +325,6 @@ export class BookmarkStore {
             }
         );
     };
+
+
 }

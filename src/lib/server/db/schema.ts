@@ -9,7 +9,7 @@ export const groups = sqliteTable(
         
         // --- 1. TAMBAHKAN ID PEMILIK ---
         userId: text('user_id').notNull(), 
-        
+        isAuto: integer('is_auto', { mode: 'boolean' }).notNull().default(false),
         createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
     },
     (t) => ({

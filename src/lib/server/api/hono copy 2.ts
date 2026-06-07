@@ -9,26 +9,6 @@ import { fetchUrlMetadata } from '../scraper';
 import { env } from '$env/dynamic/private';
 
 // ==========================================
-// TUKANG SAPU OTOMATIS (GARBAGE COLLECTOR)
-// ==========================================
-async function cleanupGroupIfEmpty(groupId: string | null) {
-    if (!groupId) return;
-    
-    // Cek apakah masih ada link lain di grup ini
-    const remainingUrls = await db.select().from(urls).where(eq(urls.groupId, groupId)).limit(1);
-    
-    // Kalau grup udah kosong blong
-    if (remainingUrls.length === 0) {
-        const grp = await db.select().from(groups).where(eq(groups.id, groupId)).limit(1);
-        
-        // Hapus grup HANYA KALAU dia buatan AI/Sistem (isAuto == true)
-        if (grp[0] && grp[0].isAuto) {
-            await db.delete(groups).where(eq(groups.id, groupId));
-        }
-    }
-}
-
-// ==========================================
 // 🔥 FUNGSI DEWA: OTOMATISASI TAG PAKAI AI
 // ==========================================
 async function getSmartTagsWithAI(title: string, description: string, url: string) {
@@ -38,7 +18,9 @@ async function getSmartTagsWithAI(title: string, description: string, url: strin
         const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY || '');
         const model = genAI.getGenerativeModel({ 
             model: "gemini-2.5-flash-lite",
-            generationConfig: { responseMimeType: "application/json" }
+            generationConfig: {
+                responseMimeType: "application/json",
+            }
         });
         
         const prompt = `
@@ -58,6 +40,9 @@ async function getSmartTagsWithAI(title: string, description: string, url: strin
     }
 }
 
+// ==========================================
+// UTILITY PARSE URL
+// ==========================================
 function parseUrl(value: unknown) {
     if (typeof value !== 'string') return null;
     const trimmed = value.trim();
@@ -73,6 +58,9 @@ function parseUrl(value: unknown) {
 
 export const api = new Hono().basePath('/api');
 
+// ==========================================
+// 1. ENDPOINT METADATA (URL)
+// ==========================================
 api.post('/metadata', async (c) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
     if (!session?.user) return c.json({ error: 'Unauthorized' }, 401);
@@ -98,9 +86,7 @@ api.post('/metadata', async (c) => {
     if (g[0]) {
         targetGroupId = g[0].id;
     } else {
-        // 🔥 Kalau user nggak milih (body.category kosong), tandai isAuto = true
-        const isSystemGenerated = !body.category;
-        const newGroup = await db.insert(groups).values({ name: finalCategoryName, userId: userId, isAuto: isSystemGenerated }).returning();
+        const newGroup = await db.insert(groups).values({ name: finalCategoryName, userId: userId }).returning();
         targetGroupId = newGroup[0].id;
     }
 
@@ -113,6 +99,7 @@ api.post('/metadata', async (c) => {
         urlId: urlRow.id, title: metaData.title, description: metaData.description, image: metaData.image, fetchedAt: new Date(now) 
     });
 
+    // 🔥 FIRE AND FORGET AI
     if (!body.category) {
         getSmartTagsWithAI(metaData.title || '', metaData.description || '', targetUrl)
             .then(async (aiTags) => {
@@ -126,13 +113,11 @@ api.post('/metadata', async (c) => {
                     if (aiGroup[0]) {
                         newTargetGroupId = aiGroup[0].id;
                     } else {
-                        // 🔥 Grup buatan AI murni = isAuto: true
-                        const insertedAiGroup = await db.insert(groups).values({ name: autoCategory, userId: userId, isAuto: true }).returning();
+                        const insertedAiGroup = await db.insert(groups).values({ name: autoCategory, userId: userId }).returning();
                         newTargetGroupId = insertedAiGroup[0].id;
                     }
 
                     await db.update(urls).set({ groupId: newTargetGroupId }).where(eq(urls.id, urlRow.id));
-                    await cleanupGroupIfEmpty(targetGroupId); // Hapus grup "Belum Disortir" kalau kosong
 
                     for (const tagName of aiTags) {
                         let tagRecords = await db.select().from(tags).where(eq(tags.name, tagName)).limit(1);
@@ -164,7 +149,6 @@ api.post('/metadata', async (c) => {
 });
 
 api.patch('/metadata/:id', async (c) => {
-    // ... (Biarin utuh kayak sebelumnya, nggak ada yang dirubah)
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
     if (!session?.user) return c.json({ error: 'Unauthorized' }, 401);
 
@@ -194,14 +178,9 @@ api.delete('/metadata', async (c) => {
 
         const urlToDel = await db.select().from(urls).where(and(eq(urls.id, body.id), eq(urls.userId, session.user.id))).limit(1);
         if (!urlToDel[0]) return c.json({ error: 'Forbidden' }, 403);
-        
-        const oldGroupId = urlToDel[0].groupId; // Simpan ID grup lamanya
 
         await db.delete(metadata).where(eq(metadata.urlId, body.id));
         await db.delete(urls).where(eq(urls.id, body.id));
-
-        // 🔥 Panggil tukang sapu
-        await cleanupGroupIfEmpty(oldGroupId);
 
         return c.json({ success: true });
     } catch (err) {
@@ -209,6 +188,9 @@ api.delete('/metadata', async (c) => {
     }
 });
 
+// ==========================================
+// 2. ENDPOINT GROUPS
+// ==========================================
 api.get('/groups', async (c) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
     if (!session?.user) return c.json({ error: 'Unauthorized' }, 401);
@@ -223,8 +205,7 @@ api.post('/groups', async (c) => {
 
     const { name } = await c.req.json();
     try {
-        // 🔥 Grup manual dari user = isAuto: false
-        await db.insert(groups).values({ name, userId: session.user.id, isAuto: false });
+        await db.insert(groups).values({ name, userId: session.user.id });
         return c.json({ success: true });
     } catch (e) {
         return c.json({ error: 'Gagal membuat grup' }, 400);
@@ -251,8 +232,7 @@ api.patch('/groups/:name', async (c) => {
 
     try {
         const updated = await db.update(groups)
-            // 🔥 Kalau user nge-rename grup AI, grup itu jadi HAK MILIK USER (isAuto: false)
-            .set({ name: newName, isAuto: false }) 
+            .set({ name: newName })
             .where(and(eq(groups.name, oldName), eq(groups.userId, session.user.id)))
             .returning();
             
@@ -268,12 +248,6 @@ api.patch('/urls/:id/group', async (c) => {
 
     const urlId = c.req.param('id');
     const { groupId: newGroupName } = await c.req.json(); 
-    
-    // Cari URL lama dulu buat dapet oldGroupId
-    const urlCheck = await db.select().from(urls).where(and(eq(urls.id, urlId), eq(urls.userId, session.user.id))).limit(1);
-    if (!urlCheck[0]) return c.json({ error: 'URL tidak ditemukan atau bukan milik Anda' }, 404);
-    
-    const oldGroupId = urlCheck[0].groupId;
 
     let targetGroupId = null;
     if (newGroupName) {
@@ -287,9 +261,7 @@ api.patch('/urls/:id/group', async (c) => {
             .where(and(eq(urls.id, urlId), eq(urls.userId, session.user.id)))
             .returning();
 
-        // 🔥 Panggil tukang sapu buat beresin rumah lama
-        await cleanupGroupIfEmpty(oldGroupId);
-
+        if (updated.length === 0) return c.json({ error: 'URL tidak ditemukan atau bukan milik Anda' }, 404);
         return c.json({ success: true, url: updated[0] });
     } catch (err) {
         return c.json({ error: 'Gagal mengupdate grup URL' }, 500);
