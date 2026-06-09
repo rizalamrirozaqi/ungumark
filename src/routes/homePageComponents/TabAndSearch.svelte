@@ -63,7 +63,7 @@
         {/if}
     
         {#if viewMode === 'groups'}
-            <div class="w-full sm:w-80 justify-end inline-flex">
+            <div class="w-full sm:w-80 sm:justify-end justify-start inline-flex">
                 <button 
                     onclick={onCreateNew}
                     class="inline-flex items-center gap-2 rounded-2xl bg-purple-100 px-5 py-3 text-sm font-bold text-purple-700 transition-all hover:bg-purple-200 hover:scale-105 hover:cursor-pointer"
