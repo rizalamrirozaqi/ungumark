@@ -76,7 +76,7 @@
             </div>
         {/if}
     
-        <div class="hidden items-center rounded-full bg-slate-200/50 p-1 shadow-inner sm:flex">
+        <div class=" items-center rounded-full bg-slate-200/50 shadow-inner px-1 flex">
             <button 
                 onclick={() => layoutMode = 'grid'} 
                 class="rounded-full p-2 transition-all {layoutMode === 'grid' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-400 hover:text-slate-700 hover:cursor-pointer'}"
@@ -92,6 +92,7 @@
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
         </div>
+
     </div>
     
 </div>
