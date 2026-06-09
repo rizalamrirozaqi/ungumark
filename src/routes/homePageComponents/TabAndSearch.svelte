@@ -15,7 +15,7 @@
 </script>
 
 <div class="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-    <div class="hidden lg:inline-flex justify-between rounded-full bg-slate-200/50 p-1.5 shadow-inner ">
+    <!-- <div class="hidden lg:inline-flex justify-between rounded-full bg-slate-200/50 p-1.5 shadow-inner ">
         <button
             onclick={() => { viewMode = 'links'; activeCategory = 'all'; }}
             class="rounded-full px-6 py-2.5 hover:cursor-pointer text-sm font-bold transition-all {viewMode === 'links' && activeCategory === 'all' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}"
@@ -28,9 +28,9 @@
         >
             Koleksi Grup - グループコレクション
         </button>
-    </div>
+    </div> -->
 
-    <div class="inline-flex lg:hidden justify-between rounded-full bg-slate-200/50 p-1.5 shadow-inner ">
+    <div class="inline-flex justify-between rounded-full bg-slate-200/50 p-1.5 shadow-inner ">
         <button
             onclick={() => { viewMode = 'links'; activeCategory = 'all'; }}
             class="w-full rounded-full px-6 py-2.5 hover:cursor-pointer text-sm font-bold transition-all whitespace-nowrap {viewMode === 'links' && activeCategory === 'all' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}"

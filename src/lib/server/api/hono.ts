@@ -8,9 +8,7 @@ import { auth } from '../auth';
 import { fetchUrlMetadata } from '../scraper';
 import { env } from '$env/dynamic/private';
 
-// ==========================================
-// TUKANG SAPU OTOMATIS (GARBAGE COLLECTOR)
-// ==========================================
+// TUKANG SAPU OTOMATIS
 async function cleanupGroupIfEmpty(groupId: string | null) {
     if (!groupId) return;
     
@@ -28,9 +26,7 @@ async function cleanupGroupIfEmpty(groupId: string | null) {
     }
 }
 
-// ==========================================
-// 🔥 FUNGSI DEWA: OTOMATISASI TAG PAKAI AI
-// ==========================================
+// OTOMATISASI TAG PAKE AI
 async function getSmartTagsWithAI(title: string, description: string, url: string) {
     try {
         if (!title) return ['Lainnya'];
