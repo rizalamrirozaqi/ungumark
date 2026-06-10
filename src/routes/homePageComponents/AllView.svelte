@@ -44,7 +44,7 @@
         {#each filteredItems as item (item.id)}
             
             {#if layoutMode === 'grid'}
-                <article onclick={() => window.open(item.url, '_blank')} class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-900/10 hover:ring-purple-200 hover:cursor-pointer">
+                <article onclick={() => window.open(item.url, '_blank')} class="hover:scale-[0.99] group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-900/10 hover:ring-purple-200 hover:cursor-pointer">
                     <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
                         <div class="absolute right-3 top-3 z-20 flex gap-1.5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
                             <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item)}} class="rounded-full bg-white/90 p-1.5 text-slate-600 shadow-sm backdrop-blur transition hover:bg-slate-200 sm:hidden"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.5" /><circle cx="12" cy="12" r="2.5" /><circle cx="12" cy="19" r="2.5" /></svg></button>
@@ -79,7 +79,7 @@
                 </article>
 
             {:else}
-                <article onclick={() => window.open(item.url, "_blank")} class=" group relative flex h-28 sm:h-36 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition-all hover:shadow-md hover:ring-purple-200 hover:cursor-pointer">
+                <article onclick={() => window.open(item.url, "_blank")} class=" hover:scale-[0.99] group relative flex h-28 sm:h-36 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition-all hover:shadow-md hover:ring-purple-200 hover:cursor-pointer">
                     <div class="relative w-28 shrink-0 bg-slate-100 sm:w-48 overflow-hidden">
                         {#if item.category && activeCategory === 'all'}
                             <button onclick={(e) => { e.stopPropagation(); onOpenGroup(item.category)}} class="absolute left-2 top-2 z-10 rounded bg-black/60 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white backdrop-blur sm:left-3 sm:top-3 sm:px-2 sm:py-1 sm:text-[9px]">{item.category}</button>
