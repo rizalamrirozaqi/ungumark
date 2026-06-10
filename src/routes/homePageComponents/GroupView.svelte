@@ -23,7 +23,7 @@
             {#if layoutMode === 'grid'}
                 <div
                     role="button" tabindex="0" onkeydown={(e) => e.key === 'Enter' && onOpen(groupName)} onclick={() => onOpen(groupName)}
-                    class="group relative flex cursor-pointer flex-col overflow-hidden rounded-[2rem] bg-white p-2.5 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-900/5 hover:ring-purple-200"
+                    class="hover:scale-[0.99] group relative flex cursor-pointer flex-col overflow-hidden rounded-[2rem] bg-white p-2.5 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-900/5 hover:ring-purple-200"
                 >
                     <div class="absolute right-4 top-4 z-30 flex gap-1.5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
                         <button onclick={(e) => onRename(groupName, e)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur hover:bg-blue-500 hover:text-white" title="Edit"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg></button>
@@ -48,7 +48,7 @@
             {:else}
                 <div
                     role="button" tabindex="0" onkeydown={(e) => e.key === 'Enter' && onOpen(groupName)} onclick={() => onOpen(groupName)}
-                    class="group flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-50 hover:ring-purple-200"
+                    class="hover:scale-[0.99] group flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-50 hover:ring-purple-200"
                 >
                     <div class="flex items-center gap-4">
                         <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-400">
