@@ -1,11 +1,13 @@
 <script lang="ts">
     let { 
-        manualGroups, items, layoutMode, // 🔥 Tangkap layoutMode
-        onRename, onDelete, onOpen 
+        manualGroups, items, layoutMode, 
+        onRename, onDelete, onOpen,
+        onShare // 🔥 TAMBAHAN BARU
     } = $props<{
         manualGroups: string[]; items: any[]; layoutMode: 'grid' | 'list';
         onRename: (name: string, e: Event) => void; onDelete: (name: string, e: Event) => void;
         onOpen: (name: string) => void;
+        onShare: (name: string, e: Event) => void; // 🔥 FUNGSI BUAT SHARE
     }>();
 </script>
 
@@ -26,6 +28,7 @@
                     class="hover:scale-[0.99] group relative flex cursor-pointer flex-col overflow-hidden rounded-[2rem] bg-white p-2.5 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-900/5 hover:ring-purple-200"
                 >
                     <div class="absolute right-4 top-4 z-30 flex gap-1.5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
+                        <button onclick={(e) => onShare(groupName, e)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur hover:bg-emerald-500 hover:text-white" title="Salin Tautan Publik"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg></button>
                         <button onclick={(e) => onRename(groupName, e)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur hover:bg-blue-500 hover:text-white" title="Edit"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg></button>
                         <button onclick={(e) => onDelete(groupName, e)} class="rounded-full bg-white/95 p-1.5 text-slate-500 shadow-sm backdrop-blur hover:bg-rose-500 hover:text-white" title="Hapus"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg></button>
                     </div>
@@ -61,6 +64,7 @@
                     </div>
 
                     <div class="flex gap-2 pr-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
+                        <button onclick={(e) => onShare(groupName, e)} class="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-emerald-500 hover:text-white" title="Salin Tautan Publik"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg></button>
                         <button onclick={(e) => onRename(groupName, e)} class="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-blue-500 hover:text-white" title="Edit"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg></button>
                         <button onclick={(e) => onDelete(groupName, e)} class="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-rose-500 hover:text-white" title="Hapus"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg></button>
                     </div>

@@ -291,3 +291,107 @@ api.patch('/urls/:id/group', async (c) => {
         return c.json({ error: 'Gagal mengupdate grup URL' }, 500);
     }
 });
+
+
+
+// ENDPOINT FITUR BERBAGI (SHARED REPO)
+
+// A. Endpoint buat NAMPILIN isi Grup ke Publik (Gak perlu login)
+api.get('/shared/:groupId', async (c) => {
+    const groupId = c.req.param('groupId');
+
+    try {
+        // 1. Cari info grupnya
+        const targetGroup = await db.select().from(groups).where(eq(groups.id, groupId)).limit(1);
+        if (!targetGroup[0]) return c.json({ error: 'Koleksi tidak ditemukan' }, 404);
+
+        // 2. Tarik semua URL yang ada di grup itu beserta metadatanya
+        // Kita pakai join biar sekalian dapet judul & gambar
+        const groupLinks = await db.select({
+            id: urls.id,
+            url: urls.url,
+            title: metadata.title,
+            description: metadata.description,
+            image: metadata.image
+        })
+        .from(urls)
+        .leftJoin(metadata, eq(metadata.urlId, urls.id))
+        .where(eq(urls.groupId, groupId));
+
+        return c.json({
+            groupName: targetGroup[0].name,
+            ownerId: targetGroup[0].userId, // Bisa dipake buat nampilin "Dibuat oleh..." nanti
+            links: groupLinks
+        });
+    } catch (err) {
+        return c.json({ error: 'Gagal memuat koleksi publik' }, 500);
+    }
+});
+
+
+// B. Endpoint buat IMPORT (Kloning) ke Akun Sendiri (Wajib Login)
+api.post('/shared/:groupId/import', async (c) => {
+    const session = await auth.api.getSession({ headers: c.req.raw.headers });
+    if (!session?.user) return c.json({ error: 'Harus login untuk mengimpor' }, 401);
+    
+    const userId = session.user.id;
+    const sourceGroupId = c.req.param('groupId');
+
+    try {
+        // 1. Cek grup aslinya ada apa nggak
+        const sourceGroup = await db.select().from(groups).where(eq(groups.id, sourceGroupId)).limit(1);
+        if (!sourceGroup[0]) return c.json({ error: 'Koleksi sumber tidak ditemukan' }, 404);
+
+        // Jangan biarin user import grupnya sendiri (ngapain wkwkwk)
+        if (sourceGroup[0].userId === userId) {
+            return c.json({ error: 'Ini sudah koleksi Anda sendiri kocak' }, 400);
+        }
+
+        // 2. Bikin Grup Baru di akun user yang lagi login
+        const newGroupName = `${sourceGroup[0].name} (Import)`;
+        const newGroup = await db.insert(groups).values({ 
+            name: newGroupName, 
+            userId: userId, 
+            isAuto: false 
+        }).returning();
+        
+        const newGroupId = newGroup[0].id;
+
+        // 3. Tarik semua URL dari grup asli
+        const sourceUrls = await db.select().from(urls).where(eq(urls.groupId, sourceGroupId));
+
+        // 4. Looping: Copy satu-satu ke akun user baru
+        for (const sUrl of sourceUrls) {
+            // Cek biar gak dobel kalau dia udah pernah nyimpen URL ini
+            const isDuplicate = await db.select().from(urls)
+                .where(and(eq(urls.url, sUrl.url), eq(urls.userId, userId))).limit(1);
+            
+            if (!isDuplicate[0]) {
+                // Insert URL baru
+                const insertedUrl = await db.insert(urls).values({
+                    url: sUrl.url,
+                    groupId: newGroupId,
+                    userId: userId,
+                    updatedAt: new Date()
+                }).returning();
+
+                // Ambil & copy metadata lama (biar gak usah panggil Scraper/AI lagi, biar ngebut!)
+                const oldMeta = await db.select().from(metadata).where(eq(metadata.urlId, sUrl.id)).limit(1);
+                
+                if (oldMeta[0]) {
+                    await db.insert(metadata).values({
+                        urlId: insertedUrl[0].id,
+                        title: oldMeta[0].title,
+                        description: oldMeta[0].description,
+                        image: oldMeta[0].image,
+                        fetchedAt: new Date()
+                    });
+                }
+            }
+        }
+
+        return c.json({ success: true, message: 'Berhasil diimpor!' });
+    } catch (err) {
+        return c.json({ error: 'Gagal mengimpor koleksi' }, 500);
+    }
+});

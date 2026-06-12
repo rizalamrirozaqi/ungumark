@@ -120,6 +120,7 @@
 
             {#if store.viewMode === 'groups'}
                 <GroupView 
+                    onShare={(name, e) => { e.stopPropagation(); store.copyShareLink(name); }}
                     manualGroups={store.manualGroups}
                     items={store.items}
                     onRename={store.promptRenameGroup}
