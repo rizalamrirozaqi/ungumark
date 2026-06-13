@@ -327,32 +327,25 @@ export class BookmarkStore {
     };
 
 
-    async copyShareLink(groupName: string) {
+async copyShareLink(groupName: string) {
         try {
-            // 1. Tarik data grup dari API buat dapetin ID aslinya
             const res = await fetch('/api/groups');
             if (!res.ok) throw new Error('Gagal mengambil data grup');
             const groups = await res.json();
             
-            // 2. Cari grup yang namanya cocok sama yang diklik
             const targetGroup = groups.find((g: any) => g.name === groupName);
-            
             if (!targetGroup) {
-                alert('Grup tidak ditemukan!');
-                return;
+                return { success: false, message: 'Grup tidak ditemukan!' };
             }
 
-            // 3. Rakit Link Publiknya (Otomatis nyesuain domain localhost atau Vercel)
             const shareUrl = `${window.location.origin}/shared/${targetGroup.id}`;
-
-            // 4. Copy ke Clipboard OS
             await navigator.clipboard.writeText(shareUrl);
             
-            // 5. Kasih tau user kalau udah sukses
-            alert(`Tautan publik berhasil disalin!\n\nBisa langsung di-paste ke WhatsApp/Teman Anda.`);
+            // Berhasil! Balikin status true, gak usah pake alert
+            return { success: true }; 
         } catch (error) {
             console.error("Gagal menyalin tautan:", error);
-            alert('Gagal menyalin tautan. Pastikan browser Anda mengizinkan akses Clipboard.');
+            return { success: false, message: 'Gagal menyalin tautan. Pastikan browser diizinkan mengakses Clipboard.' };
         }
     }
 

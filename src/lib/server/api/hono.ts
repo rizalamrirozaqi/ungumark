@@ -334,12 +334,12 @@ api.post('/shared/:groupId/import', async (c) => {
     
     const userId = session.user.id;
     const sourceGroupId = c.req.param('groupId');
-
+    
     try {
         // 1. Cek grup aslinya ada apa nggak
         const sourceGroup = await db.select().from(groups).where(eq(groups.id, sourceGroupId)).limit(1);
         if (!sourceGroup[0]) return c.json({ error: 'Koleksi sumber tidak ditemukan' }, 404);
-
+        
         // Jangan biarin user import grupnya sendiri (ngapain wkwkwk)
         if (sourceGroup[0].userId === userId) {
             return c.json({ error: 'Ini sudah koleksi Anda sendiri kocak' }, 400);
@@ -347,13 +347,25 @@ api.post('/shared/:groupId/import', async (c) => {
 
         // 2. Bikin Grup Baru di akun user yang lagi login
         const newGroupName = `${sourceGroup[0].name}`;
-        const newGroup = await db.insert(groups).values({ 
-            name: newGroupName, 
-            userId: userId, 
-            isAuto: false 
-        }).returning();
-        
-        const newGroupId = newGroup[0].id;
+
+        let targetGroupId = null;
+
+        const existGroup = await db.select().from(groups).where(
+            and(eq(groups.name, newGroupName), eq(groups.userId, userId))
+        ).limit(1);
+
+        if(existGroup[0]) {
+            targetGroupId = existGroup[0].id;
+        }
+        else {
+            const newGroup = await db.insert(groups).values({ 
+                name: newGroupName, 
+                userId: userId, 
+                isAuto: false 
+            }).returning();
+            targetGroupId = newGroup[0].id
+        }
+
 
         // 3. Tarik semua URL dari grup asli
         const sourceUrls = await db.select().from(urls).where(eq(urls.groupId, sourceGroupId));

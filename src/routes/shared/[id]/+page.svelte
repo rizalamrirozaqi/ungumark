@@ -1,14 +1,41 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    import { goto } from '$app/navigation'; // Buat lempar user ke login
     import { onMount } from 'svelte';
+    
+    // 🔥 1. Import komponen Modal lu (Sesuaikan path-nya kalau beda folder)
+    import Modal from '../../homePageComponents/Modal.svelte'; 
 
     let groupId = $page.params.id;
     
-    // 🔥 WAJIB PAKE $state DI SVELTE 5 BIAR UI-NYA NGE-REFRESH!
     let groupData = $state<any>(null);
     let loading = $state(true);
     let importing = $state(false);
     let importSuccess = $state(false);
+
+    // 🔥 2. Siapin State buat ngendaliin Modal
+    let modalState = $state({
+        isOpen: false,
+        type: 'alert',
+        title: '',
+        message: '',
+        inputValue: '',
+        options: [],
+        editData: {},
+        onConfirm: () => { modalState.isOpen = false; },
+        onCancel: () => { modalState.isOpen = false; },
+        onConfirmEdit: () => { modalState.isOpen = false; }
+    });
+
+    // Helper biar gampang manggil alert yang cakep
+    function showAlert(title: string, message: string) {
+        modalState.title = title;
+        modalState.message = message;
+        modalState.type = 'alert';
+        modalState.isOpen = true;
+        modalState.onConfirm = () => { modalState.isOpen = false; };
+        modalState.onCancel = () => { modalState.isOpen = false; };
+    }
 
     onMount(async () => {
         try {
@@ -27,14 +54,24 @@
         importing = true;
         try {
             const res = await fetch(`/api/shared/${groupId}/import`, { method: 'POST' });
+            
+            // 🔥 Tangkap 401 dan redirect ke login (bawa parameter URL sekarang)
+            if (res.status === 401) {
+                const currentPath = $page.url.pathname; 
+                goto(`/sign-in?redirect=${encodeURIComponent(currentPath)}`);
+                return; 
+            }
+
             const data = await res.json();
             if (res.ok) {
                 importSuccess = true;
             } else {
-                alert(data.error || 'Gagal mengimpor');
+                // 🔥 3. Ganti alert() jelek pake Modal
+                showAlert('Gagal Mengimpor', data.error || 'Terjadi kesalahan saat memproses data.');
             }
         } catch (err) {
-            alert('Terjadi kesalahan jaringan.');
+            // 🔥 Ganti alert() jelek pake Modal
+            showAlert('Kesalahan Jaringan', 'Gagal terhubung ke server. Periksa koneksi internet Anda.');
         } finally {
             importing = false;
         }
@@ -44,6 +81,8 @@
 <svelte:head>
     <title>{groupData?.groupName ? `Koleksi: ${groupData.groupName}` : 'Koleksi Publik'} - UnguMark</title>
 </svelte:head>
+
+<Modal bind:modal={modalState} />
 
 <div class="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-5xl">
@@ -63,7 +102,15 @@
                 </div>
                 
                 {#if importSuccess}
-                    <div class="rounded-2xl bg-white/20 px-6 py-3 text-sm font-bold backdrop-blur">✅ Berhasil Diimpor!</div>
+                    <div class="flex flex-col items-center sm:items-start gap-3">
+                        <div class="rounded-2xl bg-white/20 px-6 py-3 text-sm font-bold backdrop-blur">
+                            Berhasil Diimpor
+                        </div>
+                        <a href="/" class="group flex items-center gap-2 text-sm font-semibold text-purple-200 transition hover:text-white">
+                            Lihat di Workspace Saya 
+                            <span class="transition group-hover:translate-x-1">&rarr;</span>
+                        </a>
+                    </div>
                 {:else}
                     <button 
                         onclick={handleImport} 

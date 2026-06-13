@@ -120,13 +120,24 @@
 
             {#if store.viewMode === 'groups'}
                 <GroupView 
-                    onShare={(name, e) => { e.stopPropagation(); store.copyShareLink(name); }}
                     manualGroups={store.manualGroups}
                     items={store.items}
                     onRename={store.promptRenameGroup}
                     onDelete={store.deleteGroup}
                     onOpen={store.openGroup}
                     layoutMode={store.layoutMode}
+                    onShare={async (name, e) => { 
+                        e.stopPropagation(); 
+                        const result = await store.copyShareLink(name);
+                        
+                        if (!result.success) {
+                            store.showAlert(
+                                'Gagal',
+                                result.message || "Gagal menyalin tautan"
+                            );
+                        }
+                        return true;
+                    }}
                 />
             {:else}
                 <AllView 
