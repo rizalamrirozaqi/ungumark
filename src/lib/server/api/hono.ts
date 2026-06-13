@@ -247,7 +247,6 @@ api.patch('/groups/:name', async (c) => {
 
     try {
         const updated = await db.update(groups)
-            // 🔥 Kalau user nge-rename grup AI, grup itu jadi HAK MILIK USER (isAuto: false)
             .set({ name: newName, isAuto: false }) 
             .where(and(eq(groups.name, oldName), eq(groups.userId, session.user.id)))
             .returning();
@@ -283,7 +282,6 @@ api.patch('/urls/:id/group', async (c) => {
             .where(and(eq(urls.id, urlId), eq(urls.userId, session.user.id)))
             .returning();
 
-        // 🔥 Panggil tukang sapu buat beresin rumah lama
         await cleanupGroupIfEmpty(oldGroupId);
 
         return c.json({ success: true, url: updated[0] });
@@ -348,7 +346,7 @@ api.post('/shared/:groupId/import', async (c) => {
         }
 
         // 2. Bikin Grup Baru di akun user yang lagi login
-        const newGroupName = `${sourceGroup[0].name} (Import)`;
+        const newGroupName = `${sourceGroup[0].name}`;
         const newGroup = await db.insert(groups).values({ 
             name: newGroupName, 
             userId: userId, 

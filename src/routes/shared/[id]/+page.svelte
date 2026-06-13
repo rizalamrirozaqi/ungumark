@@ -3,10 +3,12 @@
     import { onMount } from 'svelte';
 
     let groupId = $page.params.id;
-    let groupData: any = null;
-    let loading = true;
-    let importing = false;
-    let importSuccess = false;
+    
+    // 🔥 WAJIB PAKE $state DI SVELTE 5 BIAR UI-NYA NGE-REFRESH!
+    let groupData = $state<any>(null);
+    let loading = $state(true);
+    let importing = $state(false);
+    let importSuccess = $state(false);
 
     onMount(async () => {
         try {
