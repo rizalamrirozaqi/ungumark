@@ -3,7 +3,7 @@
         filteredItems, activeCategory, q = $bindable(), 
         layoutMode, 
         onMove, onDelete, onEdit, onOpenGroup, onRenameGroup, onCloseGroup, onMobileMenu,
-        onCopy // 🔥 Tambahan prop baru
+        onCopy 
     } = $props<{
         filteredItems: any[]; activeCategory: string; q: string;
         layoutMode: 'grid' | 'list';
@@ -11,9 +11,9 @@
         onOpenGroup: (name: string) => void; onRenameGroup: (name: string, e: Event) => void;
         onCloseGroup: () => void; onMobileMenu: (item: any) => void;
         onCopy: (url: string) => Promise<{success: boolean, message?: string}>;
+        onMobileMenu: (item: any, e: MouseEvent) => void;
     }>();
 
-    // 🔥 State buat animasi centang
     let copiedId = $state<string | null>(null);
 
     async function handleCopyClick(item: any, e: Event) {
@@ -60,7 +60,7 @@
                     <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
                         
                         <div class="absolute right-3 top-3 z-20 flex gap-1.5 opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100">
-                            <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item)}} class="rounded-full bg-white/90 p-1.5 text-slate-600 shadow-sm backdrop-blur transition hover:bg-slate-200 sm:hidden"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.5" /><circle cx="12" cy="12" r="2.5" /><circle cx="12" cy="19" r="2.5" /></svg></button>
+                            <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item, e)}} class="rounded-full bg-white/90 p-1.5 text-slate-600 shadow-sm backdrop-blur transition hover:bg-slate-200 sm:hidden"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.5" /><circle cx="12" cy="12" r="2.5" /><circle cx="12" cy="19" r="2.5" /></svg></button>
                             
                             <div class="hidden sm:flex gap-1.5">
                                 <button onclick={(e) => handleCopyClick(item, e)} class="z-[100] rounded-full p-2 shadow-sm backdrop-blur transition hover:cursor-pointer {copiedId === item.id ? 'bg-emerald-500 text-white scale-110' : 'bg-white/90 text-slate-600 hover:bg-emerald-500 hover:text-white'}" title={copiedId === item.id ? "Tersalin!" : "Salin Tautan"}>
@@ -107,26 +107,26 @@
                         {/if}
                     </div>
 
-                    <div class="flex flex-1 flex-col justify-between p-3 sm:p-5">
-                        <div class="pr-8 sm:pr-24">
-                            <h3 class="text-sm font-bold leading-snug text-slate-900 line-clamp-1 sm:line-clamp-2 sm:text-lg group-hover:text-purple-600">{item.metadata?.title ?? 'Tanpa Judul'}</h3>
-                            <p class="mt-1 line-clamp-1 text-[10px] text-slate-500 sm:mt-1.5 sm:line-clamp-2 sm:text-xs">{item.metadata?.description ?? 'Deskripsi tidak tersedia.'}</p>
-                        </div>
+                    <div class="flex flex-1 flex-col justify-between p-3 sm:p-5 w-full">
+                        <h3 class="text-sm font-bold leading-snug text-slate-900 line-clamp-1 sm:line-clamp-2 sm:text-lg group-hover:text-purple-600">{item.metadata?.title ?? 'Tanpa Judul'}</h3>
+                        <p class="mt-1 line-clamp-4 text-[10px] text-slate-500 sm:mt-1.5 sm:line-clamp-4 sm:text-xs ">{item.metadata?.description ?? 'Deskripsi tidak tersedia.'}</p>
                     </div>
 
-                    <div class="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1 sm:right-4 sm:flex-row sm:gap-2">
-                        <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item)}} class="rounded-full bg-slate-50 p-1.5 text-slate-500 hover:bg-slate-200 sm:hidden"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.5" /><circle cx="12" cy="12" r="2.5" /><circle cx="12" cy="19" r="2.5" /></svg></button>
-                        <div class="hidden sm:flex sm:gap-1.5">
-                            <button onclick={(e) => handleCopyClick(item, e)} class="z-[100] rounded-full p-2 transition hover:cursor-pointer {copiedId === item.id ? 'bg-emerald-500 text-white scale-110' : 'bg-slate-50 text-slate-500 hover:bg-emerald-500 hover:text-white'}" title={copiedId === item.id ? "Tersalin!" : "Salin Tautan"}>
-                                {#if copiedId === item.id}
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                {:else}
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                                {/if}
-                            </button>
-                            <button onclick={(e) => { e.stopPropagation(); onEdit(item.id)}} class="z-[100] rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-blue-500 hover:text-white hover:cursor-pointer" title="Edit"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg></button>
-                            <button onclick={(e) => { e.stopPropagation(); onMove(item)}} class="z-[100] rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-purple-600 hover:text-white hover:cursor-pointer" title="Pindah"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg></button>
-                            <button onclick={(e) => { e.stopPropagation(); onDelete(item.id)}} class="z-[100] rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-rose-500 hover:text-white hover:cursor-pointer" title="Hapus"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+                    <div class="h-full flex justify-center items-start sm:items-center py-3 sm:py-0 px-3 sm:px-4">
+                        <div class="flex flex-col sm:flex-row sm:gap-2">
+                            <button onclick={(e) => { e.stopPropagation(); onMobileMenu(item, e)}} class="rounded-full bg-slate-50 p-1.5 text-slate-500 hover:bg-slate-200 sm:hidden"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.5" /><circle cx="12" cy="12" r="2.5" /><circle cx="12" cy="19" r="2.5" /></svg></button>
+                            <div class="hidden sm:flex sm:gap-1.5">
+                                <button onclick={(e) => handleCopyClick(item, e)} class="z-[100] rounded-full p-2 transition hover:cursor-pointer {copiedId === item.id ? 'bg-emerald-500 text-white scale-110' : 'bg-slate-50 text-slate-500 hover:bg-emerald-500 hover:text-white'}" title={copiedId === item.id ? "Tersalin!" : "Salin Tautan"}>
+                                    {#if copiedId === item.id}
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+                                    {:else}
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                                    {/if}
+                                </button>
+                                <button onclick={(e) => { e.stopPropagation(); onEdit(item.id)}} class="z-[100] rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-blue-500 hover:text-white hover:cursor-pointer" title="Edit"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg></button>
+                                <button onclick={(e) => { e.stopPropagation(); onMove(item)}} class="z-[100] rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-purple-600 hover:text-white hover:cursor-pointer" title="Pindah"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg></button>
+                                <button onclick={(e) => { e.stopPropagation(); onDelete(item.id)}} class="z-[100] rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-rose-500 hover:text-white hover:cursor-pointer" title="Hapus"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+                            </div>
                         </div>
                     </div>
                 </article>

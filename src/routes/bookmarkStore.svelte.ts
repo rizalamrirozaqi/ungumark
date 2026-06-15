@@ -36,6 +36,7 @@ export class BookmarkStore {
         inputValue: '',
         placeholder: '',
         options: [] as { value: string; label: string }[],
+        position: null as { x: number, y: number} | null,
         
         // State khusus untuk menampung form multi-input
         editData: { title: '', description: '' }, 
@@ -302,18 +303,29 @@ export class BookmarkStore {
         }
     };
 
-    showOptions = (options: { value: string; label: string; color?: string }[], onSelect: (val: string) => void) => {
+    showOptions = (options: { value: string; label: string; color?: string }[], onSelect: (val: string) => void, event?: MouseEvent) => {
+        let position = null;
+        if (event) {
+            let x = event.clientX;
+            let y = event.clientY;
+            
+            if (x > window.innerWidth - 220) x = window.innerWidth - 220; 
+            if (y > window.innerHeight - 250) y = window.innerHeight - 250; 
+            
+            position = { x, y };
+        }
         this.modal = {
             ...this.modal, 
             isOpen: true, 
             type: 'options',
             options,
+            position,
             onConfirm: (val) => { onSelect(val || ''); this.closeModal(); },
             onCancel: this.closeModal
         };
     };
 
-    handleMobileMenu = (item: any) => {
+    handleMobileMenu = (item: any, e: MouseEvent) => {
         this.showOptions(
             [
                 { value: 'copy', label: 'Salin', color: 'text-slate-700' },
@@ -335,7 +347,8 @@ export class BookmarkStore {
                     else if (val === 'move') this.promptMoveItem(item);
                     else if (val === 'delete') this.handleDeleteItem(item.id);
                 }, 150);
-            }
+            },
+            e
         );
     };
     async copyItemUrl(url: string) {
