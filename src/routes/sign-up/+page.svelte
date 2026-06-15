@@ -109,7 +109,7 @@
                     </p>
                     <button
                         onclick={loginGoogle}
-                        class="mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-slate-900 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800" hover:cursor-pointer
+                        class="mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-slate-900 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 hover:cursor-pointer" 
                     >
                         Lanjutkan dengan Google
                     </button>

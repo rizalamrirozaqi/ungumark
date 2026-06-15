@@ -30,7 +30,7 @@ export class BookmarkStore {
     // Modal State
     modal = $state({
         isOpen: false,
-        type: 'alert' as 'alert' | 'confirm' | 'prompt' | 'select' | 'edit-meta' | 'options', 
+        type: 'alert' as 'alert' | 'success' | 'confirm' | 'prompt' | 'select' | 'edit-meta' | 'options', 
         title: '',
         message: '',
         inputValue: '',
@@ -73,6 +73,11 @@ export class BookmarkStore {
     showAlert = (title: string, message: string) => {
         this.modal = { ...this.modal, isOpen: true, type: 'alert', title, message, onConfirm: this.closeModal };
     };
+
+    showSuccess = (title: string, message: string) => {
+        this.modal = { ...this.modal, isOpen: true, type: 'success', title, message, onConfirm: this.closeModal };
+    };
+
 
     showConfirm = (title: string, message: string, onConfirm: () => void) => {
         this.modal = {
@@ -311,20 +316,37 @@ export class BookmarkStore {
     handleMobileMenu = (item: any) => {
         this.showOptions(
             [
+                { value: 'copy', label: 'Salin', color: 'text-slate-700' },
                 { value: 'edit', label: 'Edit', color: 'text-slate-700' },
                 { value: 'move', label: 'Pindah', color: 'text-slate-700' },
                 { value: 'delete', label: 'Hapus', color: 'text-rose-500' }
             ],
             (val) => {
-                // Jeda 150ms agar modal menu hilang dulu, baru modal konfirmasi/edit mekar
-                setTimeout(() => {
-                    if (val === 'edit') this.editMetadata(item.id);
+                setTimeout(async () => {
+                    if (val === 'copy') {
+                        const res = await this.copyItemUrl(item.url);
+                        if (res.success) {
+                            this.showSuccess('Tersalin!', 'URL tautan berhasil disalin ke clipboard.');
+                        } else {
+                            this.showAlert('Gagal', res.message || 'Gagal menyalin tautan.');
+                        }
+                    }
+                    else if (val === 'edit') this.editMetadata(item.id);
                     else if (val === 'move') this.promptMoveItem(item);
                     else if (val === 'delete') this.handleDeleteItem(item.id);
                 }, 150);
             }
         );
     };
+    async copyItemUrl(url: string) {
+        try {
+            await navigator.clipboard.writeText(url);
+            return { success: true }; 
+        } catch (error) {
+            console.error("Gagal menyalin tautan:", error);
+            return { success: false, message: 'Gagal menyalin URL. Pastikan browser diizinkan mengakses Clipboard.' };
+        }
+    }
 
 
 async copyShareLink(groupName: string) {
@@ -341,7 +363,6 @@ async copyShareLink(groupName: string) {
             const shareUrl = `${window.location.origin}/shared/${targetGroup.id}`;
             await navigator.clipboard.writeText(shareUrl);
             
-            // Berhasil! Balikin status true, gak usah pake alert
             return { success: true }; 
         } catch (error) {
             console.error("Gagal menyalin tautan:", error);

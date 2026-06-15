@@ -152,6 +152,7 @@
                     onRenameGroup={store.promptRenameGroup}
                     onCloseGroup={() => { store.viewMode = 'groups'; store.activeCategory = 'all'; }}
                     layoutMode={store.layoutMode}
+                    onCopy={async (url) => await store.copyItemUrl(url)}
                 />
             {/if}
         </section>
