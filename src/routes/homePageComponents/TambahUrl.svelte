@@ -15,7 +15,6 @@
         onCreateNew: () => void;
     }>();
 
-    // State untuk mengontrol buka/tutup dropdown custom
     let isDropdownOpen = $state(false);
 
     function selectGroup(group: string) {

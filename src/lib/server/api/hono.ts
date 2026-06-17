@@ -8,18 +8,14 @@ import { auth } from '../auth';
 import { fetchUrlMetadata } from '../scraper';
 import { env } from '$env/dynamic/private';
 
-// TUKANG SAPU OTOMATIS
 async function cleanupGroupIfEmpty(groupId: string | null) {
     if (!groupId) return;
     
-    // Cek apakah masih ada link lain di grup ini
     const remainingUrls = await db.select().from(urls).where(eq(urls.groupId, groupId)).limit(1);
     
-    // Kalau grup udah kosong blong
     if (remainingUrls.length === 0) {
         const grp = await db.select().from(groups).where(eq(groups.id, groupId)).limit(1);
         
-        // Hapus grup HANYA KALAU dia buatan AI/Sistem (isAuto == true)
         if (grp[0] && grp[0].isAuto) {
             await db.delete(groups).where(eq(groups.id, groupId));
         }
@@ -160,7 +156,6 @@ api.post('/metadata', async (c) => {
 });
 
 api.patch('/metadata/:id', async (c) => {
-    // ... (Biarin utuh kayak sebelumnya, nggak ada yang dirubah)
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
     if (!session?.user) return c.json({ error: 'Unauthorized' }, 401);
 
@@ -292,19 +287,15 @@ api.patch('/urls/:id/group', async (c) => {
 
 
 
-// ENDPOINT FITUR BERBAGI (SHARED REPO)
+// ENDPOINT FITUR SHARING REPO
 
-// A. Endpoint buat NAMPILIN isi Grup ke Publik (Gak perlu login)
 api.get('/shared/:groupId', async (c) => {
     const groupId = c.req.param('groupId');
 
     try {
-        // 1. Cari info grupnya
         const targetGroup = await db.select().from(groups).where(eq(groups.id, groupId)).limit(1);
         if (!targetGroup[0]) return c.json({ error: 'Koleksi tidak ditemukan' }, 404);
 
-        // 2. Tarik semua URL yang ada di grup itu beserta metadatanya
-        // Kita pakai join biar sekalian dapet judul & gambar
         const groupLinks = await db.select({
             id: urls.id,
             url: urls.url,
@@ -318,7 +309,7 @@ api.get('/shared/:groupId', async (c) => {
 
         return c.json({
             groupName: targetGroup[0].name,
-            ownerId: targetGroup[0].userId, // Bisa dipake buat nampilin "Dibuat oleh..." nanti
+            ownerId: targetGroup[0].userId, 
             links: groupLinks
         });
     } catch (err) {
@@ -327,7 +318,6 @@ api.get('/shared/:groupId', async (c) => {
 });
 
 
-// B. Endpoint buat IMPORT (Kloning) ke Akun Sendiri (Wajib Login)
 api.post('/shared/:groupId/import', async (c) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
     if (!session?.user) return c.json({ error: 'Harus login untuk mengimpor' }, 401);

@@ -28,7 +28,7 @@ export async function fetchUrlMetadata(targetUrl: string) {
             console.log("Microlink gagal, coba jalur manual...");
         }
 
-        // JALUR MANUAL YOUTUBE (Kalo Microlink lagi error/limit)
+        // JALUR MANUAL YOUTUBE
         if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
             let videoUrl = validUrl;
             if (hostname === 'music.youtube.com') {
