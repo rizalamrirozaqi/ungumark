@@ -370,7 +370,7 @@ api.post('/shared/:groupId/import', async (c) => {
                 // Insert URL baru
                 const insertedUrl = await db.insert(urls).values({
                     url: sUrl.url,
-                    groupId: newGroupId,
+                    groupId: targetGroupId,
                     userId: userId,
                     updatedAt: new Date()
                 }).returning();
