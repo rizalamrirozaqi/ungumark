@@ -22,7 +22,7 @@ async function cleanupGroupIfEmpty(groupId: string | null) {
     }
 }
 
-// OTOMATISASI TAG PAKE AI
+// OTOMATISASI TAG WITH AI
 async function getSmartTagsWithAI(title: string, description: string, url: string) {
     try {
         if (!title) return ['Lainnya'];

@@ -15,7 +15,7 @@
         try {
             const { data, error: err } = await signIn.email({ email, password });
             if (err) {
-                error = err.message || 'Email atau password salah.';
+                error = 'Email atau password salah.';
             } else {
                 goto('/');
             }
