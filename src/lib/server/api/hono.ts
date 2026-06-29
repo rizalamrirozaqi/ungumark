@@ -41,6 +41,8 @@ async function getSmartTagsWithAI(title: string, description: string, url: strin
         `;
         
         const result = await model.generateContent(prompt);
+        let rawText = result.response.text();
+        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
         const tagsArray = JSON.parse(result.response.text())
         
         return Array.isArray(tagsArray) ? tagsArray : ['Lainnya'];
@@ -106,7 +108,7 @@ api.post('/metadata', async (c) => {
     });
 
     if (!body.category) {
-        getSmartTagsWithAI(metaData.title || '', metaData.description || '', targetUrl)
+        const backgroundTask = getSmartTagsWithAI(metaData.title || '', metaData.description || '', targetUrl)
             .then(async (aiTags) => {
                 if (aiTags && aiTags.length > 0) {
                     const autoCategory = aiTags[0] || 'Koleksi Baru';
@@ -145,6 +147,10 @@ api.post('/metadata', async (c) => {
                 }
             })
             .catch(err => console.error("Background AI gagal:", err));
+
+        if (c.executionCtx?.waitUntil) {
+            c.executionCtx.waitUntil(backgroundTask);
+        }
     }
 
     return c.json({

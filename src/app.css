@@ -12,3 +12,11 @@ body {
 	color: rgb(15 23 42);
 }
 
+
+
+
+.contoh-1 {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

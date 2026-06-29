@@ -1,3 +1,5 @@
+import FallbackImage from "$lib/assets/default-fallback-image.png"
+
 export async function fetchUrlMetadata(targetUrl: string) {
     try {
         let validUrl = targetUrl.trim();
@@ -50,12 +52,11 @@ export async function fetchUrlMetadata(targetUrl: string) {
         return {
             title: "Tautan Tersimpan",
             description: "Akses ke detail website dibatasi oleh server.",
-            image: "",
+            image: {FallbackImage},
             url: validUrl
         };
 
     } catch (error) {
-        // Nah, coba perhatikan Terminal VS Code kamu kalau masih gagal!
         console.error("====== GAGAL NGE-FETCH ======");
         console.error("URL:", targetUrl);
         console.error("Pesan Error:", error);
