@@ -41,8 +41,6 @@ async function getSmartTagsWithAI(title: string, description: string, url: strin
         `;
         
         const result = await model.generateContent(prompt);
-        let rawText = result.response.text();
-        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
         const tagsArray = JSON.parse(result.response.text())
         
         return Array.isArray(tagsArray) ? tagsArray : ['Lainnya'];
@@ -147,12 +145,7 @@ api.post('/metadata', async (c) => {
                 }
             })
             .catch(err => console.error("Background AI gagal:", err));
-
-        if (c.executionCtx?.waitUntil) {
-            c.executionCtx.waitUntil(backgroundTask);
         }
-    }
-
     return c.json({
         id: urlRow.id,
         url: urlRow.url,
