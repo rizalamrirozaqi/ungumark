@@ -22,33 +22,56 @@ async function cleanupGroupIfEmpty(groupId: string | null) {
     }
 }
 
-// OTOMATISASI TAG WITH AI
-async function getSmartTagsWithAI(title: string, description: string, url: string) {
-    try {
-        if (!title) return ['Lainnya'];
-        
-        const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY || '');
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-2.5-flash-lite",
-            generationConfig: { responseMimeType: "application/json" }
-        });
-        
-        const prompt = `
-            Berikan maksimal 3 tag singkat untuk konten ini dalam bentuk array JSON string (contoh: ["Anime", "Art"]).
-            URL: ${url}
-            Judul: ${title}
-            Deskripsi: ${description}
-        `;
-        
-        const result = await model.generateContent(prompt);
-        const tagsArray = JSON.parse(result.response.text())
-        
-        return Array.isArray(tagsArray) ? tagsArray : ['Lainnya'];
-    } catch (error) {
-        console.error("AI gagal mikir:", error);
-        return ['Sistem'];
-    }
-}
+    // OTOMATISASI TAG WITH AI
+    async function getSmartTagsWithAI(title: string, description: string, url: string) {
+        try {
+            if (!title) return ['Lainnya'];
+            
+            const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY || '');
+            const safeDescription = description ? description.substring(0, 500) : '';
+            
+            const prompt = `
+                Berikan maksimal 3 tag singkat untuk konten ini dalam bentuk array JSON string (contoh: ["Anime", "Art"]).
+                URL: ${url}
+                Judul: ${title}
+                Deskripsi: ${safeDescription}
+            `;
+            
+            const fallbackModels = [
+                "gemini-3.5-pro",
+                "gemini-3.5-flash",
+                "gemini-3.5-flash-lite",
+                "gemini-2.5-flash", 
+                "gemini-2.5-flash-lite", 
+                "gemini-2-flash",
+                "gemini-2-flash-lite"
+                ];
+
+            for (const modelName of fallbackModels) {
+                try {
+                    const model = genAI.getGenerativeModel({ 
+                        model: modelName,
+                        generationConfig: { responseMimeType: "application/json" }
+                    });
+                    
+                    const result = await model.generateContent(prompt);
+                    let responseText = result.response.text();
+                    
+                    responseText = responseText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+                    const tagsArray = JSON.parse(responseText);
+                    
+                    return Array.isArray(tagsArray) ? tagsArray : ['Lainnya'];
+                    
+                } catch (error) {
+                    console.warn(`[Peringatan] Model ${modelName} gagal (${error.message}). Mencoba model berikutnya...`);
+                    continue; 
+                }
+            }
+            } catch (error) {
+                console.error("AI gagal mikir:", error);
+                return ['Sistem'];
+            }
+        }
 
 function parseUrl(value: unknown) {
     if (typeof value !== 'string') return null;
